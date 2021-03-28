@@ -10,5 +10,14 @@ function print_help() {
 while getopts :ha:b:t:w: o
 do  case "$o" in
       h)  print_help
+        ;;
+      a)  #TODO
+        ;;
+      b)  #TODO
+        ;;
+      t)  #TODO
+        ;;
+      w)  #TODO
+        ;;
     esac
 done
