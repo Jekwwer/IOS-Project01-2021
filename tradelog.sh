@@ -1,15 +1,23 @@
 #!/bin/bash
 
+
+## VARIABLES ##
+# Some variables exports for correct script working
 export POSIXLY_CORRECT=yes
 export LC_NUMERIC=en_US.UTF-8
 
+# Some variables for storing arguments
 TICKERS=""
 LOG_FILE=""
 
+
+## FUNCTIONS ##
+# Function of printing help message for user
 function print_help() {
   echo "help" #TODO
 }
 
+# Function of printing by tickers, which are given by user
 function print_by_tickers() {
   ARRAY_OF_TICKETS=($TICKERS)
   awk -v t="${ARRAY_OF_TICKETS[*]}" -F ';' '
@@ -17,11 +25,11 @@ function print_by_tickers() {
     $2 in tickers' "$LOG_FILE"
 }
 
+# Function of printing the list of tickets
 function list_tick() {
-  if [[ $LOG_FILE != "" ]]; then
     awk -F';' '{print $2}' $LOG_FILE | sort -u
-  fi
 }
+
 
 # ARGUMENTS PROCESSING
 while getopts :ha:b:t:w: o; do
@@ -47,7 +55,6 @@ done
 ((OPTIND--))
 shift $OPTIND
 for i in $*; do
-  echo "1"
   if [[ $1 == "list-tick" ]]; then
     TICK=1
   else
