@@ -31,7 +31,8 @@ function list_tick() {
 }
 
 
-# ARGUMENTS PROCESSING
+## START OF THE PROGRAM
+# OPTIONS PROCESSING
 while getopts :ha:b:t:w: o; do
   case "$o" in
   h)
@@ -52,6 +53,7 @@ while getopts :ha:b:t:w: o; do
   esac
 done
 
+# ARGUMENTS PROCESSING
 ((OPTIND--))
 shift $OPTIND
 for i in $*; do
@@ -65,14 +67,12 @@ done
 
 if [[ $TICK -eq 1 ]]; then
   list_tick
-fi
-
-if [[ "$TICKERS" != "" ]]; then
+elif [[ "$TICKERS" != "" ]]; then
   print_by_tickers
-fi
-
-if [[ "$LOG_FILE" == "" ]] && [[ $TICKERS == "" ]]; then
+elif [[ "$LOG_FILE" == "" ]] && [[ $TICKERS == "" ]]; then
   while read A; do
     echo $A
   done
 fi
+
+## END OF THE PROGRAM
