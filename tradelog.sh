@@ -24,8 +24,10 @@ function print_help() {
 # Function of printing by tickers, which are given by user
 function print_by_tickers() {
   ARRAY_OF_TICKETS=($TICKERS)
-  awk -v t="${ARRAY_OF_TICKETS[*]}" -F ';' '
-  BEGIN { n=split(t,list," "); for (i=1;i<=n;i++) tickers[list[i]] }
+  awk -v t="${ARRAY_OF_TICKETS[*]}" -F';' '
+  BEGIN { n=split(t,list," ");
+  for (i=1;i<=n;i++)
+  tickers[list[i]] }
   $2 in tickers {print}' $1
 }
 
@@ -45,12 +47,23 @@ function profit() {
 }
 
 function pos() {
-  awk -F';'
+  arr=($(list_tick "-"))
+  for tick in ${arr[*]}; do
+    awk -v key=$tick -F';' '
+    BEGIN {num = 0}
+    {if ($2 == key && $3 == "buy")
+        num = num + $6
+    if ($2 == key && $3 == "sell")
+        num = num - $6
+    if ($2 == key)
+        last = $4}
+    END {printf("%-10s:%12.2f\n", key, last*num)}' $1
+  done
 }
 
 # Function, that prints last price of a stock of each ticket
 function last_price() {
-  arr=($(list_tick))
+  arr=($(list_tick "-"))
   for tick in ${arr[*]}; do
     awk -v key=$tick -F';' '
     BEGIN {last=0}
@@ -106,8 +119,10 @@ if [[ "$TICKERS" != "" ]]; then
     print_by_tickers $LOG_FILE | list_tick $STDINPUT
   elif [[ $PROF -eq 1 ]]; then
     print_by_tickers $LOG_FILE | profit $STDINPUT
-      elif [ $LAST -eq 1 ]; then
+  elif [ $LAST -eq 1 ]; then
     print_by_tickers $LOG_FILE | last_price $LOG_FILE
+  elif [ $POS -eq 1 ]; then
+    print_by_tickers $LOG_FILE | pos $LOG_FILE | sort -k2nr -t:
   else
     print_by_tickers $LOG_FILE
   fi
@@ -117,7 +132,9 @@ else
   elif [[ $PROF -eq 1 ]]; then
     profit $LOG_FILE
   elif [ $LAST -eq 1 ]; then
-    last_price $LOG_FILE
+    cat $LOG_FILE | last_price $LOG_FILE
+    elif [ $POS -eq 1 ]; then
+    cat $LOG_FILE | pos $LOG_FILE | sort -k2nr -t:
   else
     while read A; do
       echo $A
