@@ -109,6 +109,9 @@ for i in $*; do
     LAST=1
   else
     LOG_FILE=$1
+#    if [[ "$LOG_FILE" == *".gz"* ]]; then
+#      gzip -dk "$LOG_FILE" #TODO delete 'k'
+#    fi
   fi
   shift
 done
@@ -124,7 +127,9 @@ if [[ "$TICKERS" != "" ]]; then
   elif [ $POS -eq 1 ]; then
     print_by_tickers $LOG_FILE | pos $LOG_FILE | sort -k2nr -t:
   else
-    print_by_tickers $LOG_FILE
+    if [[ "$LOG_FILE" == *".gz"* ]]; then
+      gzip -dc "$LOG_FILE" | print_by_tickers #TODO remade .gz processing
+    fi
   fi
 else
   if [[ $TICK -eq 1 ]]; then
