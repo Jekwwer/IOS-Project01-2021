@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ## VARIABLES ##
 # Some variables exports for correct script working
 export POSIXLY_CORRECT=yes
@@ -10,6 +9,8 @@ export LC_NUMERIC=en_US.UTF-8
 TICKERS=""
 LOG_FILE=""
 
+TICK=0
+PROF=0
 
 ## FUNCTIONS ##
 # Function of printing help message for user
@@ -27,9 +28,17 @@ function print_by_tickers() {
 
 # Function of printing the list of tickets
 function list_tick() {
-    awk -F';' '{print $2}' $LOG_FILE | sort -u
+  awk -F';' '{print $2}' $LOG_FILE | sort -u
 }
 
+function profit() {
+  awk -F';' 'BEGIN {profit = 0}
+  {if ($3 == "buy")
+      profit = profit - ($4 * $6)
+   else
+      profit = profit + ($4 * $6)}
+  END {printf("%.2f\n", profit)}' $LOG_FILE
+}
 
 ## START OF THE PROGRAM
 # OPTIONS PROCESSING
@@ -59,6 +68,8 @@ shift $OPTIND
 for i in $*; do
   if [[ $1 == "list-tick" ]]; then
     TICK=1
+  elif [ $1 == "profit" ]; then
+    PROF=1
   else
     LOG_FILE=$1
   fi
@@ -67,6 +78,8 @@ done
 
 if [[ $TICK -eq 1 ]]; then
   list_tick
+elif [[ $PROF -eq 1 ]]; then
+  profit
 elif [[ "$TICKERS" != "" ]]; then
   print_by_tickers
 elif [[ "$LOG_FILE" == "" ]] && [[ $TICKERS == "" ]]; then
