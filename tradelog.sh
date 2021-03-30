@@ -8,11 +8,13 @@ export LC_NUMERIC=en_US.UTF-8
 # Some variables for storing arguments
 TICKERS=""
 LOG_FILE=""
+STDINPUT=""
 
 TICK=0
 PROF=0
 
 ## FUNCTIONS ##
+
 # Function of printing help message for user
 function print_help() {
   echo "help" #TODO
@@ -23,7 +25,7 @@ function print_by_tickers() {
   ARRAY_OF_TICKETS=($TICKERS)
   awk -v t="${ARRAY_OF_TICKETS[*]}" -F ';' '
   BEGIN { n=split(t,list," "); for (i=1;i<=n;i++) tickers[list[i]] }
-    $2 in tickers' "$LOG_FILE"
+  $2 in tickers {print}' $1
 }
 
 # Function of printing the list of tickets
@@ -37,8 +39,10 @@ function profit() {
       profit = profit - ($4 * $6)
    else
       profit = profit + ($4 * $6)}
-  END {printf("%.2f\n", profit)}' $LOG_FILE
+  END {printf("%.2f\n", profit)}' $1
 }
+
+COMMAND_SECVENCE=()
 
 ## START OF THE PROGRAM
 # OPTIONS PROCESSING
@@ -53,6 +57,9 @@ while getopts :ha:b:t:w: o; do
     ;;
   t)
     TICKERS="$TICKERS $OPTARG"
+    if ! [[ " ${COMMAND_SECVENCE[*]} " =~ " print_by_tickers " ]]; then
+      COMMAND_SECVENCE+=("print_by_tickers")
+    fi
     ;;
   w) #TODO
     ;;
@@ -76,16 +83,25 @@ for i in $*; do
   shift
 done
 
-if [[ $TICK -eq 1 ]]; then
-  list_tick
-elif [[ $PROF -eq 1 ]]; then
-  profit
-elif [[ "$TICKERS" != "" ]]; then
-  print_by_tickers
-elif [[ "$LOG_FILE" == "" ]] && [[ $TICKERS == "" ]]; then
-  while read A; do
+# COMMAND PROCESSING
+if [[ "$TICKERS" != "" ]]; then
+  if [[ $TICK -eq 1 ]]; then
+    print_by_tickers $LOG_FILE | list_tick $STDINPUT
+  elif [[ $PROF -eq 1 ]]; then
+    print_by_tickers $LOG_FILE | profit $STDINPUT
+  else
+    print_by_tickers $LOG_FILE
+  fi
+else
+  if [[ $TICK -eq 1 ]]; then
+    list_tick $LOG_FILE
+  elif [[ $PROF -eq 1 ]]; then
+    profit $LOG_FILE
+  else
+    while read A; do
     echo $A
-  done
+    done
+  fi
 fi
 
 ## END OF THE PROGRAM
