@@ -12,9 +12,10 @@ STDINPUT=""
 
 TICK=0
 PROF=0
+POS=0
+LAST=0
 
 ## FUNCTIONS ##
-
 # Function of printing help message for user
 function print_help() {
   echo "help" #TODO
@@ -33,6 +34,7 @@ function list_tick() {
   awk -F';' '{print $2}' $1 | sort -u
 }
 
+# Function, that prints profit of deals
 function profit() {
   awk -F';' 'BEGIN {profit = 0}
   {if ($3 == "buy")
@@ -46,6 +48,7 @@ function pos() {
   awk -F';'
 }
 
+# Function, that prints last price of a stock of each ticket
 function last_price() {
   arr=($(list_tick))
   for tick in ${arr[*]}; do
@@ -70,9 +73,6 @@ while getopts :ha:b:t:w: o; do
     ;;
   t)
     TICKERS="$TICKERS $OPTARG"
-    if ! [[ " ${COMMAND_SECVENCE[*]} " =~ " print_by_tickers " ]]; then
-      COMMAND_SECVENCE+=("print_by_tickers")
-    fi
     ;;
   w) #TODO
     ;;
