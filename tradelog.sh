@@ -80,9 +80,9 @@ while getopts :ha:b:t:w: o; do
   h)
     print_help
     ;;
-  a) #TODO
+  a) AFTER_DATE="$OPTARG"
     ;;
-  b) #TODO
+  b) BEFORE_DETE="$OPTARG"
     ;;
   t)
     TICKERS="$TICKERS $OPTARG"
