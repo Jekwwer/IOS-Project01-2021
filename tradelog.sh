@@ -30,7 +30,7 @@ function print_by_tickers() {
 
 # Function of printing the list of tickets
 function list_tick() {
-  awk -F';' '{print $2}' $LOG_FILE | sort -u
+  awk -F';' '{print $2}' $1 | sort -u
 }
 
 function profit() {
@@ -42,7 +42,20 @@ function profit() {
   END {printf("%.2f\n", profit)}' $1
 }
 
-COMMAND_SECVENCE=()
+function pos() {
+  awk -F';'
+}
+
+function last_price() {
+  arr=($(list_tick))
+  for tick in ${arr[*]}; do
+    awk -v key=$tick -F';' '
+    BEGIN {last=0}
+    {if ($2 == key)
+        last = $4}
+    END {printf("%-10s:%8.2f\n", key, last)}' $1
+  done
+}
 
 ## START OF THE PROGRAM
 # OPTIONS PROCESSING
@@ -73,10 +86,14 @@ done
 ((OPTIND--))
 shift $OPTIND
 for i in $*; do
-  if [[ $1 == "list-tick" ]]; then
+  if [ $1 == "list-tick" ]; then
     TICK=1
   elif [ $1 == "profit" ]; then
     PROF=1
+  elif [ $1 == "pos" ]; then
+    POS=1
+  elif [ $1 == "last-price" ]; then
+    LAST=1
   else
     LOG_FILE=$1
   fi
@@ -89,6 +106,8 @@ if [[ "$TICKERS" != "" ]]; then
     print_by_tickers $LOG_FILE | list_tick $STDINPUT
   elif [[ $PROF -eq 1 ]]; then
     print_by_tickers $LOG_FILE | profit $STDINPUT
+      elif [ $LAST -eq 1 ]; then
+    print_by_tickers $LOG_FILE | last_price $LOG_FILE
   else
     print_by_tickers $LOG_FILE
   fi
@@ -97,9 +116,11 @@ else
     list_tick $LOG_FILE
   elif [[ $PROF -eq 1 ]]; then
     profit $LOG_FILE
+  elif [ $LAST -eq 1 ]; then
+    last_price $LOG_FILE
   else
     while read A; do
-    echo $A
+      echo $A
     done
   fi
 fi
