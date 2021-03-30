@@ -18,7 +18,26 @@ LAST=0
 ## FUNCTIONS ##
 # Function of printing help message for user
 function print_help() {
-  echo "help" #TODO
+  echo "Usage: tradelog [-h|--help] [FILTER] [COMMAND] [LOG FILES]"
+  echo "Shows stocks information(analyzing, statistics, filtering) by user requirements"
+  echo ""
+  echo "FILTERS"
+  echo "  -a DATETIME       process records AFTER given date(without it)"
+  echo "                    DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
+  echo "  -b DATETIME       process records BEFORE given date(without it)"
+  echo "                    DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
+  echo "  -t TICKER         process records with given TICKER"
+  echo "                    if the filter acquires multiple times, will be processed"
+  echo "                    all records with these TICKERS"
+  echo "  -w WIDTH" #TODO
+  echo "  -h --help         display this help and exit"
+  echo ""
+  echo "COMMANDS"
+  echo "  list_tick         print records by given TICKERS"
+  echo "  profit            print total gain"
+  echo "  pos               print list of obtained stocks in descending order by value "
+
+  exit
 }
 
 # Function of printing by tickers, which are given by user
