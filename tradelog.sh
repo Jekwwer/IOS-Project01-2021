@@ -15,7 +15,7 @@ POS=0
 LAST=0
 
 ## FUNCTIONS ##
-# Function of printing help message for user
+# Function that prints help message for the user
 function print_help() {
   echo "Usage: tradelog [-h|--help] [FILTER] [COMMAND] [LOG FILES]"
   echo "Shows stocks information(analyzing, statistics, filtering) by user requirements"
@@ -34,12 +34,14 @@ function print_help() {
   echo "COMMANDS"
   echo "  list_tick         print records by given TICKERS"
   echo "  profit            print total gain"
-  echo "  pos               print list of obtained stocks in descending order by value "
+  echo "  pos               print list of obtained stocks in descending order by value"
   echo "  last-price        print last price for each ticket"
   echo "  hist-ord          print a histogram of transaction number for each ticket"
   echo "  graph-pos         print a graph of obtained stocks values for each ticket"
   exit
 }
+
+# Function that processes entered by user commands into sequence of operations
 function process_the_commands() {
       if [[ $TICK -eq 1 ]]; then
         list_tick
@@ -54,7 +56,7 @@ function process_the_commands() {
       fi
 }
 
-# Function of printing by tickers, which are given by user
+# Function that prints records by tickers, which are given by user
 function print_by_tickers() {
   ARRAY_OF_TICKETS=($TICKERS)
   awk -v t="${ARRAY_OF_TICKETS[*]}" -F';' '
@@ -64,12 +66,12 @@ function print_by_tickers() {
   $2 in tickers {print}'
 }
 
-# Function of printing the list of tickets
+# Function that prints the list of tickets
 function list_tick() {
   awk -F';' '{print $2}' $1 | sort -u
 }
 
-# Function, that prints profit of deals
+# Function that prints profit of deals
 function profit() {
   awk -F';' 'BEGIN {profit = 0}
   {if ($3 == "buy")
@@ -79,6 +81,7 @@ function profit() {
   END {printf("%.2f\n", profit)}'
 }
 
+# Functions that prints list of obtained stocks in descending order by value
 function pos() {
   TICKERS_ARRAY=($(list_tick "-"))
   for tick in ${TICKERS_ARRAY[*]}; do
@@ -94,7 +97,7 @@ function pos() {
   done
 }
 
-# Function, that prints last price of a stock of each ticket
+# Function that prints last price of a stock of each ticket
 function last_price() {
   TICKERS_ARRAY=($(list_tick "-"))
   printf "$INPUT\n" | for tick in ${TICKERS_ARRAY[*]}; do
