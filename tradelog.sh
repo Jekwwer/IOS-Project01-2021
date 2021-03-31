@@ -22,12 +22,13 @@ function print_help() {
   echo ""
   echo "FILTERS"
   echo "  -a DATETIME       process records AFTER given date(without it)"
-  echo "                    DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
+  echo "                      DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
   echo "  -b DATETIME       process records BEFORE given date(without it)"
-  echo "                    DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
+  echo "                      DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
   echo "  -t TICKER         process records with given TICKER"
-  echo "                    if the filter acquires multiple times, will be processed"
-  echo "                    all records with these TICKERS"
+  echo "                      TICKER is a string without semicolon(:) and white characters"
+  echo "                      if the filter acquires multiple times, will be processed"
+  echo "                      all records with these TICKERS"
   echo "  -w WIDTH" #TODO
   echo "  -h --help         display this help and exit"
   echo ""
@@ -136,7 +137,7 @@ done
 # ARGUMENTS PROCESSING
 ((OPTIND--))
 shift $OPTIND
-for i in $*; do
+for _ in $*; do
   if [ $1 == "list-tick" ]; then
     TICK=1
   elif [ $1 == "profit" ]; then
