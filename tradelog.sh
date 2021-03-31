@@ -36,7 +36,9 @@ function print_help() {
   echo "  list_tick         print records by given TICKERS"
   echo "  profit            print total gain"
   echo "  pos               print list of obtained stocks in descending order by value "
-
+  echo "  last-price        print last price for each ticket"
+  echo "  hist-ord          print a histogram of transaction number for each ticket"
+  echo "  graph-pos         print a graph of obtained stocks values for each ticket"
   exit
 }
 
@@ -126,6 +128,8 @@ for i in $*; do
     POS=1
   elif [ $1 == "last-price" ]; then
     LAST=1
+  elif [ $1 == "--help" ]; then
+      print_help
   else
     LOG_FILE=$1
 #    if [[ "$LOG_FILE" == *".gz"* ]]; then
