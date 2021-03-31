@@ -41,6 +41,19 @@ function print_help() {
   echo "  graph-pos         print a graph of obtained stocks values for each ticket"
   exit
 }
+function process_the_commands() {
+      if [[ $TICK -eq 1 ]]; then
+        list_tick
+      elif [[ $PROF -eq 1 ]]; then
+        profit
+      elif [ $LAST -eq 1 ]; then
+        last_price
+      elif [ $POS -eq 1 ]; then
+        sort -k2nr -t:
+      else
+        cat
+      fi
+}
 
 # Function of printing by tickers, which are given by user
 function print_by_tickers() {
@@ -149,33 +162,12 @@ else
   INPUT=$(cat)
 fi
 
-# COMMAND PROCESSING
+# RESULT PROCESSING
 printf "$INPUT\n" |
   if [[ "$TICKERS" != "" ]]; then
-    print_by_tickers |
-      if [[ $TICK -eq 1 ]]; then
-        list_tick
-      elif [[ $PROF -eq 1 ]]; then
-        profit
-      elif [ $LAST -eq 1 ]; then
-        last_price
-      elif [ $POS -eq 1 ]; then
-        sort -k2nr -t:
-      else
-        cat
-      fi
-  elif [[ "$TICKERS" == "" ]]; then
-    if [[ $TICK -eq 1 ]]; then
-      list_tick
-    elif [[ $PROF -eq 1 ]]; then
-      profit
-    elif [ $LAST -eq 1 ]; then
-      ast_price
-    elif [ $POS -eq 1 ]; then
-      pos | sort -k2nr -t:
-    else
-      cat
-    fi
+    print_by_tickers | process_the_commands
+  else
+    process_the_commands
   fi
 
 ## END OF THE PROGRAM
