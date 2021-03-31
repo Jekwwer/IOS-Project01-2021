@@ -43,17 +43,17 @@ function print_help() {
 
 # Function that processes entered by user commands into sequence of operations
 function process_the_commands() {
-      if [[ $TICK -eq 1 ]]; then
-        list_tick
-      elif [[ $PROF -eq 1 ]]; then
-        profit
-      elif [ $LAST -eq 1 ]; then
-        last_price
-      elif [ $POS -eq 1 ]; then
-        pos | sort -k2nr -t:
-      else
-        cat
-      fi
+  if [[ $TICK -eq 1 ]]; then
+    list_tick
+  elif [[ $PROF -eq 1 ]]; then
+    profit
+  elif [ $LAST -eq 1 ]; then
+    last_price
+  elif [ $POS -eq 1 ]; then
+    pos | sort -k2nr -t:
+  else
+    cat
+  fi
 }
 
 # Function that prints records by tickers, which are given by user
