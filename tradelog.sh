@@ -8,7 +8,6 @@ export LC_NUMERIC=en_US.UTF-8
 # Some variables for storing arguments
 TICKERS=""
 LOG_FILE=""
-STDINPUT=""
 
 TICK=0
 PROF=0
@@ -49,7 +48,7 @@ function process_the_commands() {
       elif [ $LAST -eq 1 ]; then
         last_price
       elif [ $POS -eq 1 ]; then
-        sort -k2nr -t:
+        pos | sort -k2nr -t:
       else
         cat
       fi
