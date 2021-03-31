@@ -49,7 +49,7 @@ function print_by_tickers() {
   BEGIN { n=split(t,list," ");
   for (i=1;i<=n;i++)
   tickers[list[i]] }
-  $2 in tickers {print}' $1
+  $2 in tickers {print}'
 }
 
 # Function of printing the list of tickets
@@ -64,7 +64,7 @@ function profit() {
       profit = profit - ($4 * $6)
    else
       profit = profit + ($4 * $6)}
-  END {printf("%.2f\n", profit)}' $1
+  END {printf("%.2f\n", profit)}'
 }
 
 function pos() {
@@ -141,39 +141,41 @@ done
 #INPUT PROCESSING
 if [ "$LOG_FILE" != "" ]; then
   if [[ "$LOG_FILE" == *".gz"* ]]; then
-    INPUT=`gzip -dc "$LOG_FILE"`
+    INPUT=$(gzip -dc "$LOG_FILE")
   else
-    INPUT=`cat "$LOG_FILE"`
+    INPUT=$(cat "$LOG_FILE")
   fi
 else
-  INPUT=`cat`
+  INPUT=$(cat)
 fi
 
 # COMMAND PROCESSING
-if [[ "$TICKERS" != "" ]]; then
-  if [[ $TICK -eq 1 ]]; then
-    printf "$INPUT\n" | print_by_tickers | list_tick
-  elif [[ $PROF -eq 1 ]]; then
-    printf "$INPUT\n" | print_by_tickers | profit
-  elif [ $LAST -eq 1 ]; then
-    printf "$INPUT\n" | print_by_tickers | last_price
-  elif [ $POS -eq 1 ]; then
-    printf "$INPUT\n" | print_by_tickers | pos | sort -k2nr -t:
-  else
-    printf "$INPUT\n" | print_by_tickers
+printf "$INPUT\n" |
+  if [[ "$TICKERS" != "" ]]; then
+    print_by_tickers |
+      if [[ $TICK -eq 1 ]]; then
+        list_tick
+      elif [[ $PROF -eq 1 ]]; then
+        profit
+      elif [ $LAST -eq 1 ]; then
+        last_price
+      elif [ $POS -eq 1 ]; then
+        sort -k2nr -t:
+      else
+        cat
+      fi
+  elif [[ "$TICKERS" == "" ]]; then
+    if [[ $TICK -eq 1 ]]; then
+      list_tick
+    elif [[ $PROF -eq 1 ]]; then
+      profit
+    elif [ $LAST -eq 1 ]; then
+      ast_price
+    elif [ $POS -eq 1 ]; then
+      pos | sort -k2nr -t:
+    else
+      cat
+    fi
   fi
-else
-  if [[ $TICK -eq 1 ]]; then
-    printf "$INPUT\n" | list_tick
-  elif [[ $PROF -eq 1 ]]; then
-    printf "$INPUT\n" | profit
-  elif [ $LAST -eq 1 ]; then
-    printf "$INPUT\n" | last_price
-  elif [ $POS -eq 1 ]; then
-    printf "$INPUT\n" | pos | sort -k2nr -t:
-  else
-    printf "$INPUT\n"
-  fi
-fi
 
 ## END OF THE PROGRAM
