@@ -162,7 +162,7 @@ function hist_ord() {
     {if ($2 == key)
         num++}
     END { printf("%-10s: ", key)
-          for (i = 0; i < num/(max/width); i++)
+          for (i = 1; i <= num/(max/width); i++)
             printf("#")
             if (i = num - 1)
               printf("\n")}'
