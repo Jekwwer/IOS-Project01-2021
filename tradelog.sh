@@ -58,7 +58,7 @@ function process_the_input() {
     fi
   else
     cat
-  fi | filtr_the_input
+  fi | filter_the_input
 }
 
 # Function that filters input
@@ -125,7 +125,7 @@ function print_before_time() {
 
 # Function that prints records by tickers, which are given by user
 function print_by_tickers() {
-  ARRAY_OF_TICKERS=($TICKERS)
+  ARRAY_OF_TICKERS=("$TICKERS")
   awk -v t="${ARRAY_OF_TICKERS[*]}" -F';' '
   BEGIN {
   n = split(t,array," ");
@@ -137,7 +137,7 @@ function print_by_tickers() {
 
 # Function that prints the list of tickets
 function list_tick() {
-  awk -F';' '{print $2}' $1 | sort -u
+  echo "$INPUT" | awk -F';' '{print $2}' | sort -u
 }
 
 # Function that prints profit of deals
@@ -153,9 +153,9 @@ function profit() {
 
 # Functions that prints list of obtained stocks in descending order by value
 function pos() {
-  ARRAY_OF_TICKERS=($(list_tick "-"))
+  ARRAY_OF_TICKERS=($(list_tick))
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    printf "$INPUT\n" | awk -v ticker=$TICKER -F';' '
+    echo "$INPUT" | awk -v ticker="$TICKER" -F';' '
     BEGIN {num = 0}
     {if ($2 == ticker && $3 == "buy")
       num = num + $6
@@ -163,15 +163,15 @@ function pos() {
       num = num - $6
     if ($2 == ticker)
       last = $4}
-    END {printf("%-10s:%12.2f\n", ticker, last*num)}'
+    END {printf("%-10s:%12.2f\n", ticker, last * num)}'
   done
 }
 
 # Function that prints last price of a stock of each ticket
 function last_price() {
-  ARRAY_OF_TICKERS=($(list_tick "-"))
-  printf "$INPUT\n" | for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    printf "$INPUT\n" | awk -v ticker=$TICKER -F';' '
+  ARRAY_OF_TICKERS=($(list_tick))
+  for TICKER in ${ARRAY_OF_TICKERS[*]}; do
+    echo "$INPUT" | awk -v ticker="$TICKER" -F';' '
     BEGIN {last=0}
     {if ($2 == ticker)
       last = $4}
@@ -181,15 +181,15 @@ function last_price() {
 
 # Function that finds the maximum number of transactions by each ticket
 function find_max_num_of_transactions() {
-  ARRAY_OF_TICKERS=($(printf "$INPUT\n" | list_tick "-"))
+  ARRAY_OF_TICKERS=($(list_tick))
   MAX_NUM_OF_TRNSC=0
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    tmp=$(printf "$INPUT\n" | awk -v ticker=$TICKER -F';' '
+    tmp=$(echo "$INPUT" | awk -v ticker="$TICKER" -F';' '
     BEGIN {num = 0}
     {if ($2 == ticker)
       num++}
     END {print num}')
-    if [ $tmp -gt $MAX_NUM_OF_TRNSC ]; then
+    if [ "$tmp" -gt $MAX_NUM_OF_TRNSC ]; then
       MAX_NUM_OF_TRNSC=$tmp
     fi
   done
@@ -204,18 +204,17 @@ function hist_ord() {
     find_max_num_of_transactions
   fi
 
-  ARRAY_OF_TICKERS=($(list_tick "-"))
+  ARRAY_OF_TICKERS=($(list_tick))
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    printf "$INPUT\n" | awk -v ticker="$TICKER" -v max=$MAX_NUM_OF_TRNSC -v width=$WIDTH -F';' '
+    echo "$INPUT" | awk -v ticker="$TICKER" -v max=$MAX_NUM_OF_TRNSC -v width=$WIDTH -F';' '
     BEGIN {num = 0}
     {if ($2 == ticker)
       num++}
     END {
-      printf("%-10s: ", ticker)
+      {printf("%-10s: ", ticker)
       for (i = 1; i <= num/(max/width); i++)
         printf("#")
-        if (i = num - 1)
-          printf("\n")}'
+      printf("\n")}}'
   done
 }
 
@@ -237,7 +236,7 @@ function find_largest_abs_value_of_pos() {
 # Function that prints a graph of obtained stocks values
 function graph_pos() {
   ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
-  printf "$INPUT\n" | pos | awk -v max="$ABS_VALUE" -v width=$WIDTH -F':' '
+  pos | awk -v max="$ABS_VALUE" -v width=$WIDTH -F':' '
     {printf("%s: ", $1)
     if ($2 >= 0)
       {for (i = 1; i <= $2/(max/width); i++)
