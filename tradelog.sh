@@ -62,7 +62,7 @@ function process_the_input() {
 }
 
 # Function that filters input
-function filtr_the_input() {
+function filter_the_input() {
   # -a -b -t
   if [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
     print_by_tickers | print_before_time | print_after_time
@@ -206,7 +206,7 @@ function hist_ord() {
 
   ARRAY_OF_TICKERS=($(list_tick "-"))
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    printf "$INPUT\n" | awk -v ticker=$TICKER -v max=$MAX_NUM_OF_TRNSC -v width=$WIDTH -F';' '
+    printf "$INPUT\n" | awk -v ticker="$TICKER" -v max=$MAX_NUM_OF_TRNSC -v width=$WIDTH -F';' '
     BEGIN {num = 0}
     {if ($2 == ticker)
       num++}
@@ -231,13 +231,13 @@ function find_largest_abs_value_of_pos() {
       max = num}
     END {printf("%.2f\n", max)}')
 
-  echo $ABS_VALUE
+  echo "$ABS_VALUE"
 }
 
 # Function that prints a graph of obtained stocks values
 function graph_pos() {
   ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
-  printf "$INPUT\n" | pos | awk -v max=$ABS_VALUE -v width=$WIDTH -F':' '
+  printf "$INPUT\n" | pos | awk -v max="$ABS_VALUE" -v width=$WIDTH -F':' '
     {printf("%s: ", $1)
     if ($2 >= 0)
       {for (i = 1; i <= $2/(max/width); i++)
@@ -279,19 +279,19 @@ done
 ((OPTIND--))
 shift $OPTIND
 for _ in $*; do
-  if [ $1 == "list-tick" ]; then
+  if [ "$1" == "list-tick" ]; then
     IS_LIST_TICK=1
-  elif [ $1 == "profit" ]; then
+  elif [ "$1" == "profit" ]; then
     IS_PROFIT=1
-  elif [ $1 == "pos" ]; then
+  elif [ "$1" == "pos" ]; then
     IS_POS=1
-  elif [ $1 == "last-price" ]; then
+  elif [ "$1" == "last-price" ]; then
     IS_LAST_PRICE=1
-  elif [ $1 == "hist-ord" ]; then
+  elif [ "$1" == "hist-ord" ]; then
     IS_HIST_ORD=1
-  elif [ $1 == "graph-pos" ]; then
+  elif [ "$1" == "graph-pos" ]; then
     IS_GRAPH_POS=1
-  elif [ $1 == "--help" ]; then
+  elif [ "$1" == "--help" ]; then
     print_help
   else
     LOG_FILE=$1
