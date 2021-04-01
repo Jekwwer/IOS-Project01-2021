@@ -35,7 +35,7 @@ function print_help() {
   echo "                      TICKER is a string without semicolon(:) and white characters"
   echo "                      if the filter acquires multiple times, will be processed"
   echo "                      all records with these TICKERS"
-  echo "  -w WIDTH" #TODO
+  echo "  -w WIDTH          sets maximum width of the longest line in graphs "
   echo "  -h --help         display this help and exit"
   echo ""
   echo "COMMANDS"
