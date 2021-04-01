@@ -9,7 +9,7 @@ export LC_NUMERIC=en_US.UTF-8
 TICKERS=""
 LOG_FILE=""
 
-WIDTH=1
+WIDTH=-1
 
 # Default values for command-flag variables
 TICK=0
@@ -130,6 +130,7 @@ function last_price() {
   done
 }
 
+# Function that finds the maximum number of transactions by each ticket
 function find_max_num_of_transactions() {
   TICKERS_ARRAY=($(printf "$INPUT\n" | list_tick "-"))
   MAX_NUM_OF_TRNSC=0
@@ -148,16 +149,20 @@ function find_max_num_of_transactions() {
 # Function that prints a histogram of the number of transactions according to the ticker
 # with maximum width given by user (if any)
 function hist_ord() {
-  find_max_num_of_transactions
+  if [ $WIDTH -eq -1 ]; then # default value
+    MAX_NUM_OF_TRNSC=$WIDTH
+  else
+    find_max_num_of_transactions
+  fi
+
   TICKERS_ARRAY=($(list_tick "-"))
-  DIF=$(( MAX_NUM_OF_TRNSC / WIDTH ))
   for tick in ${TICKERS_ARRAY[*]}; do
-    printf "$INPUT\n" | awk -v key=$tick -v dif=$DIF -F';' '
+    printf "$INPUT\n" | awk -v key=$tick -v max=$MAX_NUM_OF_TRNSC -v width=$WIDTH -F';' '
     BEGIN {num = 0}
     {if ($2 == key)
         num++}
     END { printf("%-10s: ", key)
-          for (i = 0; i < num/dif; i++)
+          for (i = 0; i < num/(max/width); i++)
             printf("#")
             if (i = num - 1)
               printf("\n")}'
