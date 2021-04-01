@@ -18,3 +18,8 @@ echo "Test #2"
   result=$(./tradelog.sh -t TSLA -t V stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test02")
   test
+
+echo "Test #3"
+  result=$(./tradelog.sh -t CVX stock-4.log.gz | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test03")
+  test
