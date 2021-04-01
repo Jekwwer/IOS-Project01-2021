@@ -9,47 +9,47 @@ function test() {
   fi
 }
 
-echo "Test #1"
+echo "Test #01"
   result=$(cat "stock-2.log" | head -n 5 | ./tradelog.sh)
   expected=$(cat "Control_Tests_Outputs/test01")
   test
 
-echo "Test #2"
+echo "Test #02"
   result=$(./tradelog.sh -t TSLA -t V stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test02")
   test
 
-echo "Test #3"
+echo "Test #03"
   result=$(./tradelog.sh -t CVX stock-4.log.gz | head -n 3)
   expected=$(cat "Control_Tests_Outputs/test03")
   test
 
-echo "Test #4"
+echo "Test #04"
   result=$(./tradelog.sh list-tick stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test04")
   test
 
-echo "Test #5"
+echo "Test #05"
   result=$(./tradelog.sh profit stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test05")
   test
 
-echo "Test #6"
+echo "Test #06"
   result=$(./tradelog.sh -t TSM -t PYPL profit stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test06")
   test
 
-echo "Test #7"
+echo "Test #07"
   result=$(./tradelog.sh pos stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test07")
   test
 
-echo "Test #8"
+echo "Test #08"
   result=$(./tradelog.sh -t TSM -t PYPL -t AAPL pos stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test08")
   test
 
-echo "Test #9"
+echo "Test #09"
   result=$(./tradelog.sh last-price stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test09")
   test
