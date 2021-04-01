@@ -43,3 +43,8 @@ echo "Test #7"
   result=$(./tradelog.sh pos stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test07")
   test
+
+echo "Test #8"
+  result=$(./tradelog.sh -t TSM -t PYPL -t AAPL pos stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test08")
+  test
