@@ -17,6 +17,7 @@ PROF=0
 POS=0
 LAST=0
 HIST=0
+GPOS=0
 
 ## FUNCTIONS ##
 # Function that prints help message for the user
@@ -58,6 +59,8 @@ function process_the_commands() {
     pos | sort -k2nr -t:
   elif [ $HIST -eq 1 ]; then
     hist_ord
+  elif [ $GPOS -eq 1 ]; then
+    graph_pos
   else
     cat
   fi
@@ -169,6 +172,23 @@ function hist_ord() {
   done
 }
 
+# Function that finds the largest absolute value from output of 'pos' function
+function find_largest_abs_value_of_pos() {
+  ABS_VALUE=$( awk -F':' '
+    BEGIN {num = 0; abs = 0}
+    {if ($2 >= 0)
+      num = $2
+    else
+      num = -$2
+    if (num > abs)
+      abs = num}
+    END {printf("%.2f\n", abs)}')
+}
+
+function graph_pos() {
+  pos | find_largest_abs_value_of_pos
+}
+
 ## START OF THE PROGRAM
 # OPTIONS PROCESSING
 while getopts :ha:b:t:w: o; do
@@ -209,6 +229,8 @@ for _ in $*; do
     LAST=1
   elif [ $1 == "hist-ord" ]; then
     HIST=1
+  elif [ $1 == "graph-pos" ]; then
+    GPOS=1
   elif [ $1 == "--help" ]; then
     print_help
   else
@@ -216,6 +238,8 @@ for _ in $*; do
   fi
   shift
 done
+
+#TODO INPUT PREPROCESSING
 
 #INPUT PROCESSING
 if [ "$LOG_FILE" != "" ]; then
