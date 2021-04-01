@@ -174,7 +174,7 @@ function hist_ord() {
 
 # Function that finds the largest absolute value from output of 'pos' function
 function find_largest_abs_value_of_pos() {
-  ABS_VALUE=$( awk -F':' '
+  ABS_VALUE=$(awk -F':' '
     BEGIN {num = 0; abs = 0}
     {if ($2 >= 0)
       num = $2
@@ -183,10 +183,22 @@ function find_largest_abs_value_of_pos() {
     if (num > abs)
       abs = num}
     END {printf("%.2f\n", abs)}')
+
+  echo $ABS_VALUE
 }
 
 function graph_pos() {
-  pos | find_largest_abs_value_of_pos
+  ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
+  printf "$INPUT\n" | pos | awk -v max=$ABS_VALUE -v width=$WIDTH -F':' '
+    {printf("%s: ", $1)
+    if ($2 >= 0)
+      {for (i = 1; i <= $2/(max/width); i++)
+        printf("#")
+      printf("\n")}
+    else
+      {for (i = -1; i >= $2/(max/width); i--)
+        printf("!")
+      printf("\n")}}'
 }
 
 ## START OF THE PROGRAM
