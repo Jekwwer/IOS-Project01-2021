@@ -237,14 +237,18 @@ function find_largest_abs_value_of_pos() {
 function graph_pos() {
   ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
   pos | awk -v max="$ABS_VALUE" -v width=$WIDTH -F':' '
-    {printf("%s: ", $1)
+    {printf("%s:", $1)
     if ($2 >= 0)
-      {for (i = 1; i <= $2/(max/width); i++)
-        printf("#")
+    {for (i = 1; i <= $2/(max/width); i++){
+        if (i == 1)
+          printf(" ")
+        printf("#")}
       printf("\n")}
     else
-      {for (i = -1; i >= $2/(max/width); i--)
-        printf("!")
+      {for (i = -1; i >= $2/(max/width); i--){
+        if (i == -1)
+          printf(" ")
+        printf("!")}
       printf("\n")}}'
 }
 
