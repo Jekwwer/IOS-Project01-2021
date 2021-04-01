@@ -59,14 +59,14 @@ function process_the_commands() {
 
 # Function that prints records after date time given by user
 function print_after_time() {
-  awk -v at="$AFTER_DATE" -F';' '
+  awk -v at="$AFTER_TIME" -F';' '
   {if (at < $1)
     print $0}'
 }
 
 # Function that prints records before date time given by user
 function print_before_time() {
-  awk -v at="$BEFORE_DATE" -F';' '
+  awk -v at="$BEFORE_TIME" -F';' '
   {if (at > $1)
     print $0}'
 }
@@ -132,10 +132,10 @@ while getopts :ha:b:t:w: o; do
     print_help
     ;;
   a)
-    AFTER_DATE="$OPTARG"
+    AFTER_TIME="$OPTARG"
     ;;
   b)
-    BEFORE_DATE="$OPTARG"
+    BEFORE_TIME="$OPTARG"
     ;;
   t)
     TICKERS="$TICKERS $OPTARG"
@@ -183,17 +183,17 @@ fi
 
 # RESULT PROCESSING
 printf "$INPUT\n" |
-  if [ "$BEFORE_DATE" != "" ] && [ "$AFTER_DATE" != "" ] && [ "$TICKERS" != "" ]; then
+  if [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
     print_by_tickers | print_before_time | print_after_time
-  elif [ "$BEFORE_DATE" != "" ] && [ "$AFTER_DATE" != "" ]; then
+  elif [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ]; then
     print_before_time | print_after_time
-  elif [ "$BEFORE_DATE" != "" ] && [ "$TICKERS" != "" ]; then
+  elif [ "$BEFORE_TIME" != "" ] && [ "$TICKERS" != "" ]; then
     print_by_tickers | print_before_time
-  elif [ "$AFTER_DATE" != "" ] && [ "$TICKERS" != "" ]; then
+  elif [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
     print_by_tickers | print_after_time
-  elif [ "$BEFORE_DATE" != "" ]; then
+  elif [ "$BEFORE_TIME" != "" ]; then
     print_before_time
-  elif [ "$AFTER_DATE" != "" ]; then
+  elif [ "$AFTER_TIME" != "" ]; then
     print_after_time
   elif [ "$TICKERS" != "" ]; then
     print_by_tickers
