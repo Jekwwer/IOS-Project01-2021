@@ -48,8 +48,21 @@ function print_help() {
   exit
 }
 
-# Function that processes input by filters (if any)
+# Function that processes input
 function process_the_input() {
+  if [ "$LOG_FILE" != "" ]; then
+    if [[ "$LOG_FILE" == *".gz"* ]]; then
+      gzip -dc "$LOG_FILE"
+    else
+      cat "$LOG_FILE"
+    fi
+  else
+    cat
+  fi | filtr_the_input
+}
+
+# Function that filters input
+function filtr_the_input() {
   # -a -b -t
   if [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
     print_by_tickers | print_before_time | print_after_time
@@ -286,22 +299,10 @@ for _ in $*; do
   shift
 done
 
-#TODO INPUT PREPROCESSING
-
 #INPUT PROCESSING
-if [ "$LOG_FILE" != "" ]; then
-  if [[ "$LOG_FILE" == *".gz"* ]]; then
-    INPUT=$(gzip -dc "$LOG_FILE")
-  else
-    INPUT=$(cat "$LOG_FILE")
-  fi
-else
-  INPUT=$(cat)
-fi
-
-INPUT=$(printf "$INPUT\n" | process_the_input)
+INPUT="$(process_the_input)"
 
 # RESULT PROCESSING
-printf "$INPUT\n" | process_the_commands
+echo "$INPUT" | process_the_commands
 
 ## END OF THE PROGRAM
