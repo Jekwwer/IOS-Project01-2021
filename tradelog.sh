@@ -104,9 +104,11 @@ function print_before_time() {
 function print_by_tickers() {
   ARRAY_OF_TICKETS=($TICKERS)
   awk -v t="${ARRAY_OF_TICKETS[*]}" -F';' '
-  BEGIN { n=split(t,list," ");
+  BEGIN {
+  n = split(t,list," ");
   for (i=1;i<=n;i++)
-  tickers[list[i]] }
+    tickers[list[i]]
+  }
   $2 in tickers {print}'
 }
 
@@ -117,11 +119,12 @@ function list_tick() {
 
 # Function that prints profit of deals
 function profit() {
-  awk -F';' 'BEGIN {profit = 0}
+  awk -F';' '
+  BEGIN {profit = 0}
   {if ($3 == "buy")
-      profit = profit - ($4 * $6)
-   else
-      profit = profit + ($4 * $6)}
+    profit = profit - ($4 * $6)
+  else
+    profit = profit + ($4 * $6)}
   END {printf("%.2f\n", profit)}'
 }
 
@@ -132,11 +135,11 @@ function pos() {
     printf "$INPUT\n" | awk -v key=$tick -F';' '
     BEGIN {num = 0}
     {if ($2 == key && $3 == "buy")
-        num = num + $6
+      num = num + $6
     if ($2 == key && $3 == "sell")
-        num = num - $6
+      num = num - $6
     if ($2 == key)
-        last = $4}
+      last = $4}
     END {printf("%-10s:%12.2f\n", key, last*num)}'
   done
 }
@@ -148,7 +151,7 @@ function last_price() {
     printf "$INPUT\n" | awk -v key=$tick -F';' '
     BEGIN {last=0}
     {if ($2 == key)
-        last = $4}
+      last = $4}
     END {printf("%-10s:%8.2f\n", key, last)}'
   done
 }
@@ -161,7 +164,7 @@ function find_max_num_of_transactions() {
     tmp=$(printf "$INPUT\n" | awk -v key=$tick -F';' '
     BEGIN {num = 0}
     {if ($2 == key)
-        num++}
+      num++}
     END {print num}')
     if [ $tmp -gt $MAX_NUM_OF_TRNSC ]; then
       MAX_NUM_OF_TRNSC=$tmp
@@ -183,12 +186,13 @@ function hist_ord() {
     printf "$INPUT\n" | awk -v key=$tick -v max=$MAX_NUM_OF_TRNSC -v width=$WIDTH -F';' '
     BEGIN {num = 0}
     {if ($2 == key)
-        num++}
-    END { printf("%-10s: ", key)
-          for (i = 1; i <= num/(max/width); i++)
-            printf("#")
-            if (i = num - 1)
-              printf("\n")}'
+      num++}
+    END {
+      printf("%-10s: ", key)
+      for (i = 1; i <= num/(max/width); i++)
+        printf("#")
+        if (i = num - 1)
+          printf("\n")}'
   done
 }
 
