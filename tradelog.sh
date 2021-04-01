@@ -183,12 +183,22 @@ fi
 
 # RESULT PROCESSING
 printf "$INPUT\n" |
-  if [ "$AFTER_DATE" != "" ]; then
-    print_after_time
-  elif  [ "$BEFORE_DATE" != "" ]; then
+  if [ "$BEFORE_DATE" != "" ] && [ "$AFTER_DATE" != "" ] && [ "$TICKERS" != "" ]; then
+    print_by_tickers | print_before_time | print_after_time
+  elif [ "$BEFORE_DATE" != "" ] && [ "$AFTER_DATE" != "" ]; then
+    print_before_time | print_after_time
+  elif [ "$BEFORE_DATE" != "" ] && [ "$TICKERS" != "" ]; then
+    print_by_tickers | print_before_time
+  elif [ "$AFTER_DATE" != "" ] && [ "$TICKERS" != "" ]; then
+    print_by_tickers | print_after_time
+  elif [ "$BEFORE_DATE" != "" ]; then
     print_before_time
+  elif [ "$AFTER_DATE" != "" ]; then
+    print_after_time
   elif [ "$TICKERS" != "" ]; then
     print_by_tickers
+  else
+    cat
   fi | process_the_commands
 
 ## END OF THE PROGRAM
