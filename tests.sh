@@ -28,3 +28,8 @@ echo "Test #4"
   result=$(./tradelog.sh list-tick stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test04")
   test
+
+echo "Test #5"
+  result=$(./tradelog.sh profit stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test05")
+  test
