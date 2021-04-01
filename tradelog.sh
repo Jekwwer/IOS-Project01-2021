@@ -126,10 +126,11 @@ while getopts :ha:b:t:w: o; do
   t)
     TICKERS="$TICKERS $OPTARG"
     ;;
-  w) #TODO
+  w) WIDTH="$OPTARG"
     ;;
   *)
-    #TODO
+    >&2 echo "ERROR: Option doesn't exist" #TODO
+    exit
     ;;
   esac
 done
