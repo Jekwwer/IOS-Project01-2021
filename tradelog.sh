@@ -13,12 +13,12 @@ LOG_FILE=""
 WIDTH=-1
 
 # Default values for command-flag variables
-TICK=0
-PROF=0
-POS=0
-LAST=0
-HIST=0
-GPOS=0
+IS_LIST_TICK=0
+IS_PROFIT=0
+IS_POS=0
+IS_LAST_PRICE=0
+IS_HIST_ORD=0
+IS_GRAPH_POS=0
 
 ## FUNCTIONS ##
 # Function that prints help message for the user
@@ -92,17 +92,17 @@ function filtr_the_input() {
 
 # Function that processes entered by user commands into sequence of operations
 function process_the_commands() {
-  if [ $TICK -eq 1 ]; then
+  if [ $IS_LIST_TICK -eq 1 ]; then
     list_tick
-  elif [ $PROF -eq 1 ]; then
+  elif [ $IS_PROFIT -eq 1 ]; then
     profit
-  elif [ $LAST -eq 1 ]; then
-    last_price
-  elif [ $POS -eq 1 ]; then
+  elif [ $IS_POS -eq 1 ]; then
     pos | sort -k2nr -t:
-  elif [ $HIST -eq 1 ]; then
+  elif [ $IS_LAST_PRICE -eq 1 ]; then
+    last_price
+  elif [ $IS_HIST_ORD -eq 1 ]; then
     hist_ord
-  elif [ $GPOS -eq 1 ]; then
+  elif [ $IS_GRAPH_POS -eq 1 ]; then
     graph_pos
   else
     cat
@@ -280,17 +280,17 @@ done
 shift $OPTIND
 for _ in $*; do
   if [ $1 == "list-tick" ]; then
-    TICK=1
+    IS_LIST_TICK=1
   elif [ $1 == "profit" ]; then
-    PROF=1
+    IS_PROFIT=1
   elif [ $1 == "pos" ]; then
-    POS=1
+    IS_POS=1
   elif [ $1 == "last-price" ]; then
-    LAST=1
+    IS_LAST_PRICE=1
   elif [ $1 == "hist-ord" ]; then
-    HIST=1
+    IS_HIST_ORD=1
   elif [ $1 == "graph-pos" ]; then
-    GPOS=1
+    IS_GRAPH_POS=1
   elif [ $1 == "--help" ]; then
     print_help
   else
