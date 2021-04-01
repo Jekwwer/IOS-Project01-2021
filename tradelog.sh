@@ -47,6 +47,26 @@ function print_help() {
   exit
 }
 
+function process_the_input() {
+  if [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
+    print_by_tickers | print_before_time | print_after_time
+  elif [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ]; then
+    print_before_time | print_after_time
+  elif [ "$BEFORE_TIME" != "" ] && [ "$TICKERS" != "" ]; then
+    print_by_tickers | print_before_time
+  elif [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
+    print_by_tickers | print_after_time
+  elif [ "$BEFORE_TIME" != "" ]; then
+    print_before_time
+  elif [ "$AFTER_TIME" != "" ]; then
+    print_after_time
+  elif [ "$TICKERS" != "" ]; then
+    print_by_tickers
+  else
+    cat
+  fi
+}
+
 # Function that processes entered by user commands into sequence of operations
 function process_the_commands() {
   if [ $TICK -eq 1 ]; then
@@ -264,24 +284,9 @@ else
   INPUT=$(cat)
 fi
 
+INPUT=$(printf "$INPUT\n" | process_the_input)
+
 # RESULT PROCESSING
-printf "$INPUT\n" |
-  if [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
-    print_by_tickers | print_before_time | print_after_time
-  elif [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ]; then
-    print_before_time | print_after_time
-  elif [ "$BEFORE_TIME" != "" ] && [ "$TICKERS" != "" ]; then
-    print_by_tickers | print_before_time
-  elif [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
-    print_by_tickers | print_after_time
-  elif [ "$BEFORE_TIME" != "" ]; then
-    print_before_time
-  elif [ "$AFTER_TIME" != "" ]; then
-    print_after_time
-  elif [ "$TICKERS" != "" ]; then
-    print_by_tickers
-  else
-    cat
-  fi | process_the_commands
+printf "$INPUT\n" | process_the_commands
 
 ## END OF THE PROGRAM
