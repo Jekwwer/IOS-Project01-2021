@@ -53,3 +53,8 @@ echo "Test #09"
   result=$(./tradelog.sh last-price stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test09")
   test
+
+echo "Test #10"
+  result=$(./tradelog.sh hist-ord stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test10")
+  test
