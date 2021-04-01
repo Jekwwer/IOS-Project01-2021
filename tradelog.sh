@@ -9,10 +9,14 @@ export LC_NUMERIC=en_US.UTF-8
 TICKERS=""
 LOG_FILE=""
 
+WIDTH=1
+
+# Default values for command-flag variables
 TICK=0
 PROF=0
 POS=0
 LAST=0
+HIST=0
 
 ## FUNCTIONS ##
 # Function that prints help message for the user
@@ -52,6 +56,8 @@ function process_the_commands() {
     last_price
   elif [ $POS -eq 1 ]; then
     pos | sort -k2nr -t:
+  elif [ $HIST -eq 1 ]; then
+    hist_ord
   else
     cat
   fi
@@ -124,6 +130,40 @@ function last_price() {
   done
 }
 
+function find_max_num_of_transactions() {
+  TICKERS_ARRAY=($(printf "$INPUT\n" | list_tick "-"))
+  MAX_NUM_OF_TRNSC=0
+  for tick in ${TICKERS_ARRAY[*]}; do
+    tmp=$(printf "$INPUT\n" | awk -v key=$tick -F';' '
+    BEGIN {num = 0}
+    {if ($2 == key)
+        num++}
+    END {print num}')
+    if [ $tmp -gt $MAX_NUM_OF_TRNSC ]; then
+      MAX_NUM_OF_TRNSC=$tmp
+    fi
+  done
+}
+
+# Function that prints a histogram of the number of transactions according to the ticker
+# with maximum width given by user (if any)
+function hist_ord() {
+  find_max_num_of_transactions
+  TICKERS_ARRAY=($(list_tick "-"))
+  DIF=$(( MAX_NUM_OF_TRNSC / WIDTH ))
+  for tick in ${TICKERS_ARRAY[*]}; do
+    printf "$INPUT\n" | awk -v key=$tick -v dif=$DIF -F';' '
+    BEGIN {num = 0}
+    {if ($2 == key)
+        num++}
+    END { printf("%-10s: ", key)
+          for (i = 0; i < num/dif; i++)
+            printf("#")
+            if (i = num - 1)
+              printf("\n")}'
+  done
+}
+
 ## START OF THE PROGRAM
 # OPTIONS PROCESSING
 while getopts :ha:b:t:w: o; do
@@ -162,6 +202,8 @@ for _ in $*; do
     POS=1
   elif [ $1 == "last-price" ]; then
     LAST=1
+  elif [ $1 == "hist-ord" ]; then
+    HIST=1
   elif [ $1 == "--help" ]; then
     print_help
   else
