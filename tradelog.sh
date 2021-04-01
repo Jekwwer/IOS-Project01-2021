@@ -64,6 +64,13 @@ function print_after_time() {
     print $0}'
 }
 
+# Function that prints records before date time given by user
+function print_before_time() {
+  awk -v at="$BEFORE_DATE" -F';' '
+  {if (at > $1)
+    print $0}'
+}
+
 # Function that prints records by tickers, which are given by user
 function print_by_tickers() {
   ARRAY_OF_TICKETS=($TICKERS)
@@ -137,7 +144,7 @@ while getopts :ha:b:t:w: o; do
     WIDTH="$OPTARG"
     ;;
   *)
-    echo >&2 "ERROR: Option doesn't exist" #TODO
+    echo "ERROR: Option doesn't exist" #TODO
     exit
     ;;
   esac
@@ -177,12 +184,11 @@ fi
 # RESULT PROCESSING
 printf "$INPUT\n" |
   if [ "$AFTER_DATE" != "" ]; then
-    print_after_time | process_the_commands
-  fi
-if [[ "$TICKERS" != "" ]]; then
-  print_by_tickers | process_the_commands
-  #else
-  # process_the_commands
-fi
+    print_after_time
+  elif  [ "$BEFORE_DATE" != "" ]; then
+    print_before_time
+  elif [[ "$TICKERS" != "" ]]; then
+    print_by_tickers
+  fi | process_the_commands
 
 ## END OF THE PROGRAM
