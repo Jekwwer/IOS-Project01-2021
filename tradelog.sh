@@ -9,6 +9,7 @@ export LC_NUMERIC=en_US.UTF-8
 TICKERS=""
 LOG_FILE=""
 
+# Default values for option variables
 WIDTH=-1
 
 # Default values for command-flag variables
@@ -47,21 +48,30 @@ function print_help() {
   exit
 }
 
+# Function that processes input by filters (if any)
 function process_the_input() {
+  # -a -b -t
   if [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
     print_by_tickers | print_before_time | print_after_time
+  # -a -b
   elif [ "$BEFORE_TIME" != "" ] && [ "$AFTER_TIME" != "" ]; then
     print_before_time | print_after_time
+  # -b -t
   elif [ "$BEFORE_TIME" != "" ] && [ "$TICKERS" != "" ]; then
     print_by_tickers | print_before_time
+  # -a -t
   elif [ "$AFTER_TIME" != "" ] && [ "$TICKERS" != "" ]; then
     print_by_tickers | print_after_time
+  # -b
   elif [ "$BEFORE_TIME" != "" ]; then
     print_before_time
+  # -a
   elif [ "$AFTER_TIME" != "" ]; then
     print_after_time
+  # -t
   elif [ "$TICKERS" != "" ]; then
     print_by_tickers
+  # none
   else
     cat
   fi
@@ -211,6 +221,7 @@ function find_largest_abs_value_of_pos() {
   echo $ABS_VALUE
 }
 
+# Function that prints a graph of obtained stocks values
 function graph_pos() {
   ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
   printf "$INPUT\n" | pos | awk -v max=$ABS_VALUE -v width=$WIDTH -F':' '
