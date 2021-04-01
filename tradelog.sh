@@ -44,9 +44,9 @@ function print_help() {
 
 # Function that processes entered by user commands into sequence of operations
 function process_the_commands() {
-  if [[ $TICK -eq 1 ]]; then
+  if [ $TICK -eq 1 ]; then
     list_tick
-  elif [[ $PROF -eq 1 ]]; then
+  elif [ $PROF -eq 1 ]; then
     profit
   elif [ $LAST -eq 1 ]; then
     last_price
@@ -187,7 +187,7 @@ printf "$INPUT\n" |
     print_after_time
   elif  [ "$BEFORE_DATE" != "" ]; then
     print_before_time
-  elif [[ "$TICKERS" != "" ]]; then
+  elif [ "$TICKERS" != "" ]; then
     print_by_tickers
   fi | process_the_commands
 
