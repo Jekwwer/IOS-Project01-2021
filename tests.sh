@@ -137,4 +137,9 @@ echo "Test 23"
   expected="Error: WIDTH must be a positive integer"
   test
 
+echo "Test 24"
+  result=$(./tradelog.sh -w -5 graph-pos my-stock-2.log)
+  expected="Error: WIDTH must be a positive integer"
+  test
+
 # TODO Add tests for multiple files
