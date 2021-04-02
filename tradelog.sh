@@ -3,7 +3,7 @@
 ## VARIABLES ##
 # Some variables exports for correct script working
 export POSIXLY_CORRECT=yes
-export LC_NUMERIC=en_US.UTF-8
+export LC_ALL=C
 
 # Some variables for storing arguments
 TICKERS=""
