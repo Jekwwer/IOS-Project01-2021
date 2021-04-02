@@ -272,8 +272,10 @@ while getopts :ha:b:t:w: o; do
     WIDTH="$OPTARG"
     ;;
   *)
-    echo "ERROR: Option doesn't exist" #TODO
-    exit
+    if [[ "$*" != *"--help"* ]]; then
+      echo "ERROR: Option doesn't exist" #TODO
+      exit
+    fi
     ;;
   esac
 done
