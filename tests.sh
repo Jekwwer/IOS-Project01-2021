@@ -306,7 +306,7 @@ echo "Test 38"
 
 echo "Test 39"
   result=$(./tradelog.sh - my-stock-2.log 2>&1)
-  expected="Error: Option doesn't exist"
+  expected="Error: input file - doesn't exist"
   return_value_test 1 1
   test
 
