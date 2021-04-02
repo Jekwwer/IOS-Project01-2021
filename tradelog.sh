@@ -239,8 +239,7 @@ function graph_pos() {
   ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
   # Setting the width
   if [ $WIDTH -eq -1 ]; then # if user doesn't set WIDTH
-    WIDTH=$((ABS_VALUE / 1000))
-    echo $WIDTH
+    WIDTH=$(awk -v max=$ABS_VALUE 'BEGIN{print max/1000}' $INPUT)
   fi
   # Printing the graph
   pos | awk -v max="$ABS_VALUE" -v width=$WIDTH -F':' '
