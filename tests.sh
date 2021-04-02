@@ -194,5 +194,15 @@ echo "Test 34"
   expected=$(cat "Control_Tests_Outputs/test34")
   test
 
+echo "Test #35.1"
+  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-5.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test35")
+  test
+
+echo "Test #35.2"
+  result=$(./tradelog.sh -t CVX my-stock-5.log stock-4.log.gz | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test35")
+  test
+
 # TODO Add tests for multiple files
 # TODO Add tests for mix of files .log and .gz
