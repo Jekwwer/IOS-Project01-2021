@@ -85,7 +85,7 @@ echo "Test \"graph-pos with default WIDTH\""
 
 echo "Test 15"
 echo "Test \"graph-pos with user WIDTH\""
-  result=$(./tradelog.sh graph-pos -w 6 my-stock-2.log)
+  result=$(./tradelog.sh -w 6 graph-pos my-stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test15")
   test
 
