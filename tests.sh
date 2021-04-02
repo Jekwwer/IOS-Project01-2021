@@ -106,6 +106,11 @@ echo "Test 18"
   expected=$(cat "Control_Tests_Outputs/test18")
   test
 
+echo "Test 19"
+  result=$(./tradelog.sh -b 2021-07-29 21:18:20 my-stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test19")
+  test
+
 
 # TODO Add tests for multiple files
 # TODO Add tests for -a and -b options
