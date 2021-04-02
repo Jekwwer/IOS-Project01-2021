@@ -326,8 +326,12 @@ while getopts :ha:b:t:w: o; do
     if [ $IS_WIDTH -eq 0 ]; then
       IS_WIDTH=1
       WIDTH="$OPTARG"
+      num_check='^[0-9]+$'
+      if ! [[ $WIDTH =~ $num_check ]]; then
+        error_exit "Error: WIDTH must be a positive integer"
+      fi
       if [ $WIDTH -le 0 ]; then # Zero is defined as neither negative nor positive
-        error_exit "Error: WIDTH must be a positive number"
+        error_exit "Error: WIDTH must be a positive integer"
       fi
     else
       error_exit "Error: option '-w' must occur only once"
