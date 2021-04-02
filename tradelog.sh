@@ -69,7 +69,7 @@ function process_the_input() {
   else
     cat
   fi
-  echo "$MY_INPUT" | filter_the_input
+  echo "$MY_INPUT" | sort -k1 -t\; | filter_the_input
 }
 
 # Function that filters input
