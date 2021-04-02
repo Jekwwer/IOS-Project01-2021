@@ -182,4 +182,9 @@ echo "Test 32"
   expected="Error: option '-w' must occur only once"
   test
 
+echo "Test 33"
+  result=$(./tradelog.sh -w 34.69 -w graph-pos my-stock-2.log)
+  expected="Error: WIDTH must be a positive integer"
+  test
+
 # TODO Add tests for multiple files
