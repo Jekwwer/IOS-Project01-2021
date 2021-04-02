@@ -187,4 +187,12 @@ echo "Test 33"
   expected="Error: WIDTH must be a positive integer"
   test
 
+echo ""
+echo echo "Tests \"Multiple files\""
+echo "Test 34"
+  result=$(./tradelog.sh last-price my-stock-3.log my-stock-4.log)
+  expected=$(cat "Control_Tests_Outputs/test34")
+  test
+
 # TODO Add tests for multiple files
+# TODO Add tests for mix of files .log and .gz
