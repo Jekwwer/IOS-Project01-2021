@@ -198,12 +198,13 @@ function find_max_num_of_transactions() {
 # Function that prints a histogram of the number of transactions according to the ticker
 # with maximum width given by user (if any)
 function hist_ord() {
-  if [ $WIDTH -eq -1 ]; then # default value
+  # Setting the width
+  if [ $WIDTH -eq -1 ]; then # if user doesn't set WIDTH
     MAX_NUM_OF_TRNSC=$WIDTH
   else
     find_max_num_of_transactions
   fi
-
+  # Printing the histogram
   ARRAY_OF_TICKERS=($(list_tick))
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
     echo "$INPUT" | awk -v ticker="$TICKER" -v max=$MAX_NUM_OF_TRNSC -v width=$WIDTH -F';' '
