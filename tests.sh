@@ -89,6 +89,7 @@ echo "Test \"graph-pos with user WIDTH\""
   expected=$(cat "Control_Tests_Outputs/test15")
   test
 
+echo ""
 echo "Tests \"'-a' option filtering\""
 echo "Test 16"
   result=$(./tradelog.sh -a "2021-07-29 21:18:18" stock-2.log)
@@ -100,6 +101,7 @@ echo "Test 17"
   expected=$(cat "Control_Tests_Outputs/test17")
   test
 
+echo ""
 echo "Tests \"'-b' option filtering\""
 echo "Test 18"
   result=$(./tradelog.sh -b "2021-07-29 21:18:18" stock-2.log)
@@ -111,6 +113,7 @@ echo "Test 19"
   expected=$(cat "Control_Tests_Outputs/test19")
   test
 
+echo ""
 echo "Tests \"'-a -b' options filtering\""
 echo "Test 20"
   result=$(./tradelog.sh -a "2021-07-29 19:02:42" -b "2021-07-29 22:11:05" stock-2.log)
@@ -127,6 +130,11 @@ echo "Test 22"
   expected=$(cat "Control_Tests_Outputs/test22")
   test
 
+echo ""
+echo "Tests \"'-w' bad arguments\""
+echo "Test 23"
+  result=$(./tradelog.sh -w graph-pos my-stock-2.log)
+  expected="Error: WIDTH must be a positive integer"
+  test
+
 # TODO Add tests for multiple files
-# TODO Add tests for -a and -b options
-# TODO Add more tests for graph-pos with default WIDTH
