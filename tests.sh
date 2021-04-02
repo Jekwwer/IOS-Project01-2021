@@ -280,13 +280,13 @@ echo "Test #36.4"
 
 echo "Test #36.5"
   result=$(./tradelog.sh -t CVX my-stock-5.log my-stock-6.log stock-4.log.gz | head -n 5)
-  expected=$(cat "Control_Tests_Outputs/test36")
+  expected=$(cat "Control_Tests_Outputs/test36_5")
   return_value_test 0 0
   test
 
 echo "Test #36.6"
   result=$(./tradelog.sh -t CVX my-stock-6.log my-stock-5.log stock-4.log.gz | head -n 5)
-  expected=$(cat "Control_Tests_Outputs/test36")
+  expected=$(cat "Control_Tests_Outputs/test36_6")
   return_value_test 0 0
   test
 
