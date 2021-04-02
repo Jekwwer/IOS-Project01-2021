@@ -19,6 +19,7 @@ IS_POS=0
 IS_LAST_PRICE=0
 IS_HIST_ORD=0
 IS_GRAPH_POS=0
+IS_WIDTH=0
 
 ## FUNCTIONS ##
 # Function that prints help message for the user
@@ -52,7 +53,7 @@ function print_help() {
 function process_the_input() {
   if [ "$LOG_FILE" != "" ]; then
     if [[ "$LOG_FILE" == *".gz"* ]]; then
-      gzip -dc "$LOG_FILE"
+      gzip -dc "$LOG_FILE" # TODO what if script get ,log and ,gz files
     else
       cat "$LOG_FILE"
     fi
@@ -107,6 +108,11 @@ function process_the_commands() {
   else
     cat
   fi
+}
+
+function error_exit() {
+  echo "$1" 1>&2
+  exit 1
 }
 
 # Function that prints records after date time given by user
@@ -217,7 +223,7 @@ function last_price() {
     BEGIN {last = 0; len++}
     {if ($2 == ticker)
       last = $4}
-    END {printf("%-10s:%*.2f\n", ticker, len, last)}' # TODO CHANGEABLE FORMATTING
+    END {printf("%-10s:%*.2f\n", ticker, len, last)}'
   done
 }
 
@@ -317,7 +323,15 @@ while getopts :ha:b:t:w: o; do
     TICKERS="$TICKERS $OPTARG"
     ;;
   w)
-    WIDTH="$OPTARG"
+    if [ $IS_WIDTH -eq 0 ]; then
+      IS_WIDTH=1
+      WIDTH="$OPTARG"
+      if [ $WIDTH -le 0 ]; then # Zero is defined as neither negative nor positive
+        error_exit "Error: WIDTH must be a positive number"
+      fi
+    else
+      error_exit "Error: option '-w' must occur only once"
+    fi
     ;;
   *)
     if [[ "$*" != *"--help"* ]]; then
