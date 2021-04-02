@@ -174,10 +174,10 @@ function get_length_of_the_longest_num() {
 
 # Functions that prints list of obtained stocks in descending order by value
 function pos() {
-  COLUMN_LENGTH=$(get_length_of_the_longest_num)
+  COLUMN_WIDTH=$(get_length_of_the_longest_num)
   ARRAY_OF_TICKERS=($(list_tick))
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    echo "$INPUT" | awk -v ticker="$TICKER" -v len="$COLUMN_LENGTH" -F';' '
+    echo "$INPUT" | awk -v ticker="$TICKER" -v len="$COLUMN_WIDTH" -F';' '
     BEGIN {num = 0; len++}
     {if ($2 == ticker && $3 == "buy")
       num = num + $6
