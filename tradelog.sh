@@ -352,7 +352,7 @@ while getopts :ha:b:t:w: o; do
     ;;
   *)
     if [[ "$*" != *"--help"* ]]; then
-      error_exit "ERROR: Option doesn't exist"
+      error_exit "Error: Option doesn't exist"
     fi
     ;;
   esac
