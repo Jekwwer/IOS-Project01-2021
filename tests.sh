@@ -111,6 +111,11 @@ echo "Test 19"
   expected=$(cat "Control_Tests_Outputs/test19")
   test
 
+echo "Tests \"'-a -b' options filtering\""
+echo "Test 20"
+  result=$(./tradelog.sh -a 2021-07-29 19:02:42 -b 2021-07-29 22:11:05 my-stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test20")
+  test
 
 # TODO Add tests for multiple files
 # TODO Add tests for -a and -b options
