@@ -68,3 +68,8 @@ echo "Test #12"
   result=$(./tradelog.sh -w 10 -t FB -t JNJ -t WMT graph-pos stock-6.log)
   expected=$(cat "Control_Tests_Outputs/test12")
   test
+
+echo "Test #13"
+  result=$(cat /dev/null | ./tradelog.sh profit)
+  expected=$(cat "Control_Tests_Outputs/test13")
+  test
