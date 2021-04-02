@@ -51,15 +51,25 @@ function print_help() {
 
 # Function that processes input
 function process_the_input() {
+  MY_INPUT=""
   if [ "$LOG_FILE" != "" ]; then
-    if [[ "$LOG_FILE" == *".gz"* ]]; then
-      gzip -dc "$LOG_FILE" # TODO what if script get ,log and ,gz files
-    else
-      cat "$LOG_FILE"
-    fi
+    FILES=("$LOG_FILE")
+    for file in ${FILES[*]}; do
+      if [[ "$file" == *".gz"* ]]; then
+        VAR=$(gzip -dc "$file") # TODO what if script get ,log and ,gz files
+      else
+        VAR=$(cat "$file")
+      fi
+      if [ "$MY_INPUT" == "" ]; then
+        MY_INPUT="$VAR"
+      else
+        MY_INPUT+=$(echo "$VAR" | awk 'BEGIN {printf("\n")} {print}')
+      fi
+    done
   else
     cat
-  fi | filter_the_input
+  fi
+  echo "$MY_INPUT" | filter_the_input
 }
 
 # Function that filters input
@@ -364,7 +374,11 @@ for _ in $*; do
   elif [ "$1" == "--help" ]; then
     print_help
   else
-    LOG_FILE=$1
+    if [ "$LOG_FILE" == "" ]; then
+      LOG_FILE="$1"
+    else
+      LOG_FILE="$LOG_FILE $1"
+    fi
   fi
   shift
 done
