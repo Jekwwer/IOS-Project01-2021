@@ -133,27 +133,27 @@ echo "Test 22"
 echo ""
 echo "Tests \"'-w' bad arguments\""
 echo "Test 23"
-  result=$(./tradelog.sh -w graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
   test
 
 echo "Test 24"
-  result=$(./tradelog.sh -w -5 graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w -5 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
   test
 
 echo "Test 25"
-  result=$(./tradelog.sh -w -5.5 graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w -5.5 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
   test
 
 echo "Test 26"
-  result=$(./tradelog.sh -w -1 graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w -1 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
   test
 
 echo "Test 27"
-  result=$(./tradelog.sh -w 0 graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w 0 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
   test
 
@@ -163,27 +163,27 @@ echo "Test 28"
   test
 
 echo "Test 29"
-  result=$(./tradelog.sh -w 1.5 graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w 1.5 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
   test
 
 echo "Test 30"
-  result=$(./tradelog.sh -w 6 -w 5 graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w 6 -w 5 graph-pos my-stock-2.log 2>&1)
   expected="Error: option '-w' must occur only once"
   test
 
 echo "Test 31"
-  result=$(./tradelog.sh -w 6 -w 5.5 graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w 6 -w 5.5 graph-pos my-stock-2.log 2>&1)
   expected="Error: option '-w' must occur only once"
   test
 
 echo "Test 32"
-  result=$(./tradelog.sh -w 6 -w graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w 6 -w graph-pos my-stock-2.log 2>&1)
   expected="Error: option '-w' must occur only once"
   test
 
 echo "Test 33"
-  result=$(./tradelog.sh -w 34.69 -w graph-pos my-stock-2.log)
+  result=$(./tradelog.sh -w 34.69 -w graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
   test
 
