@@ -220,40 +220,40 @@ echo "Test 34.2"
 
 echo "Test #35.1"
   result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-5.log | head -n 3)
-  expected=$(cat "Control_Tests_Outputs/test35")
+  expected=$(cat "Control_Tests_Outputs/test35_1")
   test
 
 echo "Test #35.2"
   result=$(./tradelog.sh -t CVX my-stock-5.log stock-4.log.gz | head -n 3)
-  expected=$(cat "Control_Tests_Outputs/test35")
+  expected=$(cat "Control_Tests_Outputs/test35_2")
   test
 
 echo "Test #36.1"
-  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-5.log my-stock-6.log | head -n 3)
-  expected=$(cat "Control_Tests_Outputs/test36")
+  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-5.log my-stock-6.log | head -n 5)
+  expected=$(cat "Control_Tests_Outputs/test36_1")
   test
 
 echo "Test #36.2"
-  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-6.log my-stock-5.log | head -n 3)
-  expected=$(cat "Control_Tests_Outputs/test36")
+  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-6.log my-stock-5.log | head -n 5)
+  expected=$(cat "Control_Tests_Outputs/test36_2")
   test
 
 echo "Test #36.3"
-  result=$(./tradelog.sh -t CVX my-stock-5.log stock-4.log.gz my-stock-6.log | head -n 3)
-  expected=$(cat "Control_Tests_Outputs/test36")
+  result=$(./tradelog.sh -t CVX my-stock-5.log stock-4.log.gz my-stock-6.log | head -n 5)
+  expected=$(cat "Control_Tests_Outputs/test36_3")
   test
 
 echo "Test #36.4"
-  result=$(./tradelog.sh -t CVX my-stock-6.log stock-4.log.gz my-stock-5.log | head -n 3)
-  expected=$(cat "Control_Tests_Outputs/test36")
+  result=$(./tradelog.sh -t CVX my-stock-6.log stock-4.log.gz my-stock-5.log | head -n 5)
+  expected=$(cat "Control_Tests_Outputs/test36_4")
   test
 
 echo "Test #36.5"
-  result=$(./tradelog.sh -t CVX my-stock-5.log my-stock-6.log stock-4.log.gz | head -n 3)
+  result=$(./tradelog.sh -t CVX my-stock-5.log my-stock-6.log stock-4.log.gz | head -n 5)
   expected=$(cat "Control_Tests_Outputs/test36")
   test
 
 echo "Test #36.6"
-  result=$(./tradelog.sh -t CVX my-stock-6.log my-stock-5.log stock-4.log.gz | head -n 3)
+  result=$(./tradelog.sh -t CVX my-stock-6.log my-stock-5.log stock-4.log.gz | head -n 5)
   expected=$(cat "Control_Tests_Outputs/test36")
   test
