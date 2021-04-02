@@ -213,7 +213,6 @@ echo "Test 34.1"
   expected=$(cat "Control_Tests_Outputs/test34")
   test
 
-echo "Tests \"Multiple files\""
 echo "Test 34.2"
   result=$(./tradelog.sh last-price my-stock-4.log my-stock-3.log)
   expected=$(cat "Control_Tests_Outputs/test34")
@@ -229,5 +228,32 @@ echo "Test #35.2"
   expected=$(cat "Control_Tests_Outputs/test35")
   test
 
-# TODO Add tests for multiple files
-# TODO Add tests for mix of files .log and .gz
+echo "Test #36.1"
+  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-5.log my-stock-6.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.2"
+  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-6.log my-stock-5.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.3"
+  result=$(./tradelog.sh -t CVX my-stock-5.log stock-4.log.gz my-stock-6.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.4"
+  result=$(./tradelog.sh -t CVX my-stock-6.log stock-4.log.gz my-stock-5.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.5"
+  result=$(./tradelog.sh -t CVX my-stock-5.log my-stock-6.log stock-4.log.gz | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.6"
+  result=$(./tradelog.sh -t CVX my-stock-6.log my-stock-5.log stock-4.log.gz | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
