@@ -89,24 +89,22 @@ echo "Test \"graph-pos with user WIDTH\""
   expected=$(cat "Control_Tests_Outputs/test15")
   test
 
+echo "Tests \"'-a' option filtering\""
 echo "Test 16"
-echo "Test \"'-a' option filtering\""
   result=$(./tradelog.sh -a 2021-07-29 21:18:18 my-stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test16")
   test
 
 echo "Test 17"
-echo "Test \"'-b' option filtering\""
-  result=$(./tradelog.sh -b 2021-07-29 21:18:18 my-stock-2.log)
+  result=$(./tradelog.sh -a 2021-07-29 21:18:00 my-stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test17")
   test
 
+echo "Tests \"'-b' option filtering\""
 echo "Test 18"
-echo "Test \"'-a' option filtering\""
-  result=$(./tradelog.sh -a 2021-07-29 21:18:00 my-stock-2.log)
+  result=$(./tradelog.sh -b 2021-07-29 21:18:18 my-stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test18")
   test
-
 
 
 # TODO Add tests for multiple files
