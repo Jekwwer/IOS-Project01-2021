@@ -27,24 +27,24 @@ function print_help() {
   echo "Shows stocks information(analyzing, statistics, filtering) by user requirements"
   echo ""
   echo "FILTERS"
-  echo "  -a DATETIME       process records AFTER given date(without it)"
+  echo "  -a DATETIME       process records AFTER the given date(without it)"
   echo "                      DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
   echo "  -b DATETIME       process records BEFORE given date(without it)"
   echo "                      DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
   echo "  -t TICKER         process records with given TICKER"
-  echo "                      TICKER is a string without semicolon(:) and white characters"
-  echo "                      if the filter acquires multiple times, will be processed"
-  echo "                      all records with these TICKERS"
-  echo "  -w WIDTH          sets maximum width of the longest line in graphs "
-  echo "  -h --help         display this help and exit"
+  echo "                      TICKER is a string without a semicolon(;) and white characters"
+  echo "                      if the filter acquires multiple times process"
+  echo "                      records with the given TICKERS"
+  echo "  -w WIDTH          set the maximum width of the longest line in graphs "
+  echo "  -h --help         display this help message and exit"
   echo ""
   echo "COMMANDS"
-  echo "  list_tick         print records by given TICKERS"
+  echo "  list_tick         print a list of tickers found in the LOG"
   echo "  profit            print total gain"
-  echo "  pos               print list of obtained stocks in descending order by value"
-  echo "  last-price        print last price for each ticket"
-  echo "  hist-ord          print a histogram of transaction number for each ticket"
-  echo "  graph-pos         print a graph of obtained stocks values for each ticket"
+  echo "  pos               print a list of obtained stocks in descending order by value"
+  echo "  last-price        print the last known price for each ticker"
+  echo "  hist-ord          print a histogram of the transaction number for each ticker"
+  echo "  graph-pos         print a graph of obtained stocks values for each ticker"
   exit
 }
 
@@ -135,7 +135,7 @@ function print_by_tickers() {
   $2 in tickers {print}'
 }
 
-# Function that prints the list of tickets
+# Function that prints the list of tickers
 function list_tick() {
   echo "$INPUT" | awk -F';' '{print $2}' | sort -u
 }
@@ -167,7 +167,7 @@ function pos() {
   done
 }
 
-# Function that prints last price of a stock of each ticket
+# Function that prints last price of a stock of each ticker
 function last_price() {
   ARRAY_OF_TICKERS=($(list_tick))
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
@@ -179,7 +179,7 @@ function last_price() {
   done
 }
 
-# Function that finds the maximum number of transactions by each ticket
+# Function that finds the maximum number of transactions by each ticker
 function find_max_num_of_transactions() {
   ARRAY_OF_TICKERS=($(list_tick))
   MAX_NUM_OF_TRNSC=0
