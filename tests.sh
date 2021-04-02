@@ -188,9 +188,15 @@ echo "Test 33"
   test
 
 echo ""
-echo echo "Tests \"Multiple files\""
-echo "Test 34"
+echo "Tests \"Multiple files\""
+echo "Test 34.1"
   result=$(./tradelog.sh last-price my-stock-3.log my-stock-4.log)
+  expected=$(cat "Control_Tests_Outputs/test34")
+  test
+
+echo "Tests \"Multiple files\""
+echo "Test 34.2"
+  result=$(./tradelog.sh last-price my-stock-4.log my-stock-3.log)
   expected=$(cat "Control_Tests_Outputs/test34")
   test
 
