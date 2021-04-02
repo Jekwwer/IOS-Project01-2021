@@ -20,6 +20,7 @@ IS_LAST_PRICE=0
 IS_HIST_ORD=0
 IS_GRAPH_POS=0
 IS_WIDTH=0
+DATETIME_REGEX='([0-9]{4})-([0-1][0-9])-([0-3][0-9]) ([0-2][0-9]:[0-5][0-9]:[0-5][0-9])'
 
 ## FUNCTIONS ##
 # Function that prints help message for the user
@@ -329,9 +330,15 @@ while getopts :ha:b:t:w: o; do
     ;;
   a)
     AFTER_TIME="$OPTARG"
+    if ! [[ $AFTER_TIME =~ $DATETIME_REGEX ]]; then
+      error_exit "Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or giver invalid time"
+    fi
     ;;
   b)
     BEFORE_TIME="$OPTARG"
+    if ! [[ $BEFORE_TIME =~ $DATETIME_REGEX ]]; then
+      error_exit "Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or giver invalid time"
+    fi
     ;;
   t)
     TICKERS="$TICKERS $OPTARG"
