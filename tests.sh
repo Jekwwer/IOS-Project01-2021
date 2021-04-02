@@ -172,5 +172,9 @@ echo "Test 30"
   expected="Error: option '-w' must occur only once"
   test
 
+echo "Test 31"
+  result=$(./tradelog.sh -w 6 -w 5.5 graph-pos my-stock-2.log)
+  expected="Error: option '-w' must occur only once"
+  test
 
 # TODO Add tests for multiple files
