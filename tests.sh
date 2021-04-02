@@ -89,6 +89,44 @@ echo "Test \"graph-pos with user WIDTH\""
   expected=$(cat "Control_Tests_Outputs/test15")
   test
 
+echo "Tests \"'-a' option filtering\""
+echo "Test 16"
+  result=$(./tradelog.sh -a "2021-07-29 21:18:18" stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test16")
+  test
+
+echo "Test 17"
+  result=$(./tradelog.sh -a "2021-07-29 21:18:00" stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test17")
+  test
+
+echo "Tests \"'-b' option filtering\""
+echo "Test 18"
+  result=$(./tradelog.sh -b "2021-07-29 21:18:18" stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test18")
+  test
+
+echo "Test 19"
+  result=$(./tradelog.sh -b "2021-07-29 21:18:20" stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test19")
+  test
+
+echo "Tests \"'-a -b' options filtering\""
+echo "Test 20"
+  result=$(./tradelog.sh -a "2021-07-29 19:02:42" -b "2021-07-29 22:11:05" stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test20")
+  test
+
+echo "Test 21"
+  result=$(./tradelog.sh -a "2021-07-29 22:11:05" -b "2021-07-29 19:02:42" stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test21")
+  test
+
+echo "Test 22"
+  result=$(./tradelog.sh -a "2021-07-29 19:02:42" -b "2021-07-29 19:02:42" stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test22")
+  test
+
 # TODO Add tests for multiple files
 # TODO Add tests for -a and -b options
 # TODO Add more tests for graph-pos with default WIDTH
