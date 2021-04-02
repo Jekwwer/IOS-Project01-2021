@@ -170,7 +170,7 @@ function get_length_of_the_longest_num_pos() {
       MAX_LENGTH=${#NUM}
     fi
   done
-  echo $MAX_LENGTH
+  echo "$MAX_LENGTH"
 }
 
 # Functions that prints list of obtained stocks in descending order by value
@@ -205,7 +205,7 @@ function get_length_of_the_longest_num_lp() {
       MAX_LENGTH=${#NUM}
     fi
   done
-  echo $MAX_LENGTH
+  echo "$MAX_LENGTH"
 }
 
 # Function that prints last price of a stock of each ticker
@@ -281,10 +281,10 @@ function graph_pos() {
   ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
   # Setting the width
   if [ $WIDTH -eq -1 ]; then # if user doesn't set WIDTH
-    WIDTH=$(awk -v max=$ABS_VALUE 'BEGIN{print max/1000}' $INPUT)
+    WIDTH=$(awk -v max="$ABS_VALUE" 'BEGIN{print max/1000}' "$INPUT")
   fi
   # Printing the graph
-  pos | awk -v max="$ABS_VALUE" -v width=$WIDTH -F':' '
+  pos | awk -v max="$ABS_VALUE" -v width="$WIDTH" -F':' '
     {printf("%s:", $1)
     if ($2 >= 0)
     {for (i = 1; i <= $2/(max/width); i++){
