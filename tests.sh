@@ -83,6 +83,12 @@ echo "Test \"graph-pos with default WIDTH\""
   expected=$(cat "Control_Tests_Outputs/test14")
   test
 
+echo "Test 15"
+echo "Test \"graph-pos with user WIDTH\""
+  result=$(./tradelog.sh graph-pos -w 6 my-stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test15")
+  test
+
 # TODO Add tests for multiple files
 # TODO Add tests for -a and -b options
 # TODO Add more tests for graph-pos with default WIDTH
