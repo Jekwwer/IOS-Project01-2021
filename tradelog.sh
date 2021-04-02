@@ -237,6 +237,12 @@ function find_largest_abs_value_of_pos() {
 # Function that prints a graph of obtained stocks values
 function graph_pos() {
   ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
+  # Setting the width
+  if [ $WIDTH -eq -1 ]; then # if user doesn't set WIDTH
+    WIDTH=$((ABS_VALUE / 1000))
+    echo $WIDTH
+  fi
+  # Printing the graph
   pos | awk -v max="$ABS_VALUE" -v width=$WIDTH -F':' '
     {printf("%s:", $1)
     if ($2 >= 0)
