@@ -151,8 +151,9 @@ function profit() {
   END {printf("%.2f\n", profit)}'
 }
 
+# TODO REFACTORING
 # Function that finds the longest num in 'pos' output and returns its length
-function get_length_of_the_longest_num() {
+function get_length_of_the_longest_num_pos() {
   ARRAY_OF_TICKERS=($(list_tick))
   MAX_LENGTH=0
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
@@ -174,7 +175,7 @@ function get_length_of_the_longest_num() {
 
 # Functions that prints list of obtained stocks in descending order by value
 function pos() {
-  COLUMN_WIDTH=$(get_length_of_the_longest_num)
+  COLUMN_WIDTH=$(get_length_of_the_longest_num_pos)
   ARRAY_OF_TICKERS=($(list_tick))
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
     echo "$INPUT" | awk -v ticker="$TICKER" -v len="$COLUMN_WIDTH" -F';' '
@@ -189,15 +190,34 @@ function pos() {
   done
 }
 
-# Function that prints last price of a stock of each ticker
-function last_price() {
+# TODO REFACTORING
+# Function that finds the longest num in 'last_price' output and returns its length
+function get_length_of_the_longest_num_lp() {
   ARRAY_OF_TICKERS=($(list_tick))
+  MAX_LENGTH=0
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    echo "$INPUT" | awk -v ticker="$TICKER" -F';' '
-    BEGIN {last=0}
+    NUM=$(echo "$INPUT" | awk -v ticker="$TICKER" -F';' '
+    BEGIN {last = 0}
     {if ($2 == ticker)
       last = $4}
-    END {printf("%-10s:%8.2f\n", ticker, last)}' # TODO CHANGEABLE FORMATTING
+    END {printf("%.2f", last)}')
+    if [ ${#NUM} -gt $MAX_LENGTH ]; then
+      MAX_LENGTH=${#NUM}
+    fi
+  done
+  echo $MAX_LENGTH
+}
+
+# Function that prints last price of a stock of each ticker
+function last_price() {
+  COLUMN_WIDTH=$(get_length_of_the_longest_num_lp)
+  ARRAY_OF_TICKERS=($(list_tick))
+  for TICKER in ${ARRAY_OF_TICKERS[*]}; do
+    echo "$INPUT" | awk -v ticker="$TICKER" -v len="$COLUMN_WIDTH" -F';' '
+    BEGIN {last = 0; len++}
+    {if ($2 == ticker)
+      last = $4}
+    END {printf("%-10s:%*.2f\n", ticker, len, last)}' # TODO CHANGEABLE FORMATTING
   done
 }
 
