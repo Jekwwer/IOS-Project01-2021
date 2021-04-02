@@ -9,6 +9,15 @@ function test() {
   fi
 }
 
+function return_value_test() {
+  if [ $1 -eq $2 ]; then
+    echo "  Test passed!"
+  else
+    echo "  Test failed!"
+    exit
+  fi
+}
+
 echo "Tests from the project webpage"
 echo "Test #01"
   result=$(cat "stock-2.log" | head -n 5 | ./tradelog.sh)
