@@ -10,10 +10,8 @@ function test() {
 }
 
 function return_value_test() {
-  if [ $1 -eq $2 ]; then
-    echo "  Test passed!"
-  else
-    echo "  Test failed!"
+  if ! [ $1 -eq $2 ]; then
+    echo "Wrong return value"
     exit
   fi
 }
