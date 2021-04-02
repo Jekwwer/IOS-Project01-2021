@@ -2,13 +2,14 @@
 
 function test() {
   if [[ "$result" == "$expected" ]]; then
-    echo "Test passed!"
+    echo "  Test passed!"
   else
-    echo "Test failed!"
+    echo "  Test failed!"
     exit
   fi
 }
 
+echo "Tests from the project webpage"
 echo "Test #01"
   result=$(cat "stock-2.log" | head -n 5 | ./tradelog.sh)
   expected=$(cat "Control_Tests_Outputs/test01")
@@ -73,3 +74,15 @@ echo "Test #13"
   result=$(cat /dev/null | ./tradelog.sh profit)
   expected=$(cat "Control_Tests_Outputs/test13")
   test
+
+echo ""
+echo "My own tests"
+echo "Test 14"
+echo "Test \"graph-pos with default WIDTH\""
+  result=$(./tradelog.sh graph-pos my-stock-1.log)
+  expected=$(cat "Control_Tests_Outputs/test14")
+  test
+
+# TODO Add tests for multiple files
+# TODO Add tests for -a and -b options
+# TODO Add more tests for graph-pos with default WIDTH
