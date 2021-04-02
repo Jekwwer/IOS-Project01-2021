@@ -257,3 +257,23 @@ echo "Test #36.6"
   result=$(./tradelog.sh -t CVX my-stock-6.log my-stock-5.log stock-4.log.gz | head -n 5)
   expected=$(cat "Control_Tests_Outputs/test36")
   test
+
+echo ""
+echo "Tests \"bad options\""
+echo "Test 37"
+  result=$(./tradelog.sh -r ratata -t AAAA my-stock-2.log 2>&1)
+  expected="Error: Option doesn't exist"
+  return_value_test 1 1
+  test
+
+echo "Test 38"
+  result=$(./tradelog.sh -t AAAA -y ayaya my-stock-2.log 2>&1)
+  expected="Error: Option doesn't exist"
+  return_value_test 1 1
+  test
+
+echo "Test 39"
+  result=$(./tradelog.sh - my-stock-2.log 2>&1)
+  expected="Error: Option doesn't exist"
+  return_value_test 1 1
+  test
