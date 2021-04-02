@@ -277,3 +277,29 @@ echo "Test 39"
   expected="Error: Option doesn't exist"
   return_value_test 1 1
   test
+
+echo ""
+echo "Tests \"bad input files\""
+echo "Test 40"
+  result=$(./tradelog.sh hist-ord not-my-stock-34.log 2>&1)
+  expected="Error: input file not-my-stock-34.log doesn't exist"
+  return_value_test 1 1
+  test
+
+echo "Test 41"
+  result=$(./tradelog.sh -t OLOL last-price not-my-stock-69.log.gz 2>&1)
+  expected="Error: input file not-my-stock-69.log.gz doesn't exist"
+  return_value_test 1 1
+  test
+
+echo "Test 42"
+  result=$(./tradelog.sh graph-pos my-stock-3.log not-my-stock-34.log 2>&1)
+  expected="Error: input file not-my-stock-34.log doesn't exist"
+  return_value_test 1 1
+  test
+
+echo "Test 43"
+  result=$(./tradelog.sh hist-ord my-stock-2.log not-my-stock-69.log.gz 2>&1)
+  expected="Error: input file not-my-stock-69.log.gz doesn't exist"
+  return_value_test 1 1
+  test
