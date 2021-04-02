@@ -117,6 +117,11 @@ echo "Test 20"
   expected=$(cat "Control_Tests_Outputs/test20")
   test
 
+echo "Test 21"
+  result=$(./tradelog.sh -a 2021-07-29 22:11:05 -b 2021-07-29 19:02:42 my-stock-2.log)
+  expected=$(cat "Control_Tests_Outputs/test21")
+  test
+
 # TODO Add tests for multiple files
 # TODO Add tests for -a and -b options
 # TODO Add more tests for graph-pos with default WIDTH
