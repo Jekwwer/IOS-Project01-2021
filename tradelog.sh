@@ -51,25 +51,29 @@ function print_help() {
 
 # Function that processes input
 function process_the_input() {
-  MY_INPUT=""
-  if [ "$LOG_FILE" != "" ]; then
-    FILES=("$LOG_FILE")
-    for file in ${FILES[*]}; do
-      if [[ "$file" == *".gz"* ]]; then
-        VAR=$(gzip -dc "$file") # TODO what if script get ,log and ,gz files
+  INPUT_STR=""
+  if [ "$LOG_FILE" != "" ]; then # if user specify input file
+    ARRAY_OF_FILES=("$LOG_FILE")
+    for FILE in ${ARRAY_OF_FILES[*]}; do # open every file and write
+      if [ -r "$FILE" ]; then # if file is readable
+        if [[ "$FILE" == *".gz"* ]]; then # its content to the variable
+          FILE_CONTENT=$(gzip -dc "$FILE")
+        else
+          FILE_CONTENT=$(cat "$FILE")
+        fi
       else
-        VAR=$(cat "$file")
+        error_exit "Error: input file $FILE doesn't exist"
       fi
-      if [ "$MY_INPUT" == "" ]; then
-        MY_INPUT="$VAR"
+      if [ "$INPUT_STR" == "" ]; then # if it's the first file
+        INPUT_STR="$FILE_CONTENT"
       else
-        MY_INPUT+=$(echo "$VAR" | awk 'BEGIN {printf("\n")} {print}')
+        INPUT_STR+=$(echo "$FILE_CONTENT" | awk 'BEGIN {printf("\n")} {print}')
       fi
     done
   else
-    cat
+    cat # else get input from stdin
   fi
-  echo "$MY_INPUT" | sort -k1 -t\; | filter_the_input
+  echo "$INPUT_STR" | filter_the_input
 }
 
 # Function that filters input
@@ -229,7 +233,7 @@ function last_price() {
   COLUMN_WIDTH=$(get_length_of_the_longest_num_lp)
   ARRAY_OF_TICKERS=($(list_tick))
   for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    echo "$INPUT" | awk -v ticker="$TICKER" -v len="$COLUMN_WIDTH" -F';' '
+    echo "$INPUT" | sort -k1 -t\; | awk -v ticker="$TICKER" -v len="$COLUMN_WIDTH" -F';' '
     BEGIN {last = 0; len++}
     {if ($2 == ticker)
       last = $4}
@@ -348,8 +352,7 @@ while getopts :ha:b:t:w: o; do
     ;;
   *)
     if [[ "$*" != *"--help"* ]]; then
-      echo "ERROR: Option doesn't exist" #TODO
-      exit
+      error_exit "ERROR: Option doesn't exist"
     fi
     ;;
   esac
