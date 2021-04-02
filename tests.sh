@@ -9,6 +9,14 @@ function test() {
   fi
 }
 
+function return_value_test() {
+  if ! [ $1 -eq $2 ]; then
+    echo "  Wrong return value"
+    echo "  Test failed!"
+    exit
+  fi
+}
+
 echo "Tests from the project webpage"
 echo "Test #01"
   result=$(cat "stock-2.log" | head -n 5 | ./tradelog.sh)
@@ -135,62 +143,78 @@ echo "Tests \"'-w' bad arguments\""
 echo "Test 23"
   result=$(./tradelog.sh -w graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
+  return_value_test 1 1
   test
 
 echo "Test 24"
   result=$(./tradelog.sh -w -5 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
+  return_value_test 1 1
   test
 
 echo "Test 25"
   result=$(./tradelog.sh -w -5.5 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
+  return_value_test 1 1
   test
 
 echo "Test 26"
   result=$(./tradelog.sh -w -1 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
+  return_value_test 1 1
   test
 
 echo "Test 27"
   result=$(./tradelog.sh -w 0 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
+  return_value_test 1 1
   test
 
 echo "Test 28"
   result=$(./tradelog.sh -w 1 graph-pos my-stock-2.log)
   expected=$(cat "Control_Tests_Outputs/test28")
+  return_value_test 1 1
   test
 
 echo "Test 29"
   result=$(./tradelog.sh -w 1.5 graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
+  return_value_test 1 1
   test
 
 echo "Test 30"
   result=$(./tradelog.sh -w 6 -w 5 graph-pos my-stock-2.log 2>&1)
   expected="Error: option '-w' must occur only once"
+  return_value_test 1 1
   test
 
 echo "Test 31"
   result=$(./tradelog.sh -w 6 -w 5.5 graph-pos my-stock-2.log 2>&1)
   expected="Error: option '-w' must occur only once"
+  return_value_test 1 1
   test
 
 echo "Test 32"
   result=$(./tradelog.sh -w 6 -w graph-pos my-stock-2.log 2>&1)
   expected="Error: option '-w' must occur only once"
+  return_value_test 1 1
   test
 
 echo "Test 33"
   result=$(./tradelog.sh -w 34.69 -w graph-pos my-stock-2.log 2>&1)
   expected="Error: WIDTH must be a positive integer"
+  return_value_test 1 1
   test
 
 echo ""
-echo echo "Tests \"Multiple files\""
-echo "Test 34"
+echo "Tests \"Multiple files\""
+echo "Test 34.1"
   result=$(./tradelog.sh last-price my-stock-3.log my-stock-4.log)
+  expected=$(cat "Control_Tests_Outputs/test34")
+  test
+
+echo "Test 34.2"
+  result=$(./tradelog.sh last-price my-stock-4.log my-stock-3.log)
   expected=$(cat "Control_Tests_Outputs/test34")
   test
 
@@ -204,5 +228,32 @@ echo "Test #35.2"
   expected=$(cat "Control_Tests_Outputs/test35")
   test
 
-# TODO Add tests for multiple files
-# TODO Add tests for mix of files .log and .gz
+echo "Test #36.1"
+  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-5.log my-stock-6.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.2"
+  result=$(./tradelog.sh -t CVX stock-4.log.gz my-stock-6.log my-stock-5.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.3"
+  result=$(./tradelog.sh -t CVX my-stock-5.log stock-4.log.gz my-stock-6.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.4"
+  result=$(./tradelog.sh -t CVX my-stock-6.log stock-4.log.gz my-stock-5.log | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.5"
+  result=$(./tradelog.sh -t CVX my-stock-5.log my-stock-6.log stock-4.log.gz | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
+
+echo "Test #36.6"
+  result=$(./tradelog.sh -t CVX my-stock-6.log my-stock-5.log stock-4.log.gz | head -n 3)
+  expected=$(cat "Control_Tests_Outputs/test36")
+  test
