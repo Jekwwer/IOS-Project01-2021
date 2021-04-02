@@ -388,7 +388,9 @@ done
 
 #INPUT PROCESSING
 INPUT="$(process_the_input)"
-
+if [ $? -eq 1 ]; then
+  exit 1
+fi
 # RESULT PROCESSING
 echo "$INPUT" | process_the_commands
 
