@@ -7,19 +7,19 @@ export LC_ALL=C
 
 # Some variables for storing arguments
 TICKERS=""
-LOG_FILE=""
+LOG_FILES=""
 
 # Default values for option variables
-WIDTH=-1
+WIDTH=-1    #TODO READONLY
 
 # Default values for command-flag variables
 NUM_OF_COMMANDS=0
-IS_LIST_TICK=0
-IS_PROFIT=0
-IS_POS=0
-IS_LAST_PRICE=0
-IS_HIST_ORD=0
-IS_GRAPH_POS=0
+is_list_tick=0
+is_profit=0
+is_pos=0
+is_last_price=0
+is_hist_ord=0
+is_graph_pos=0
 IS_WIDTH=0
 
 ## FUNCTIONS ##
@@ -33,8 +33,8 @@ function print_help() {
   echo "                      DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
   echo "  -b DATETIME       process records BEFORE given date(without it)"
   echo "                      DATETIME is given in the format YYYY-MM-DD HH:MM:SS"
-  echo "  -t TICKER         process records with given TICKER"
-  echo "                      TICKER is a string without a semicolon(;) and white characters"
+  echo "  -t ticker         process records with given ticker"
+  echo "                      ticker is a string without a semicolon(;) and white characters"
   echo "                      if the filter acquires multiple times process"
   echo "                      records with the given TICKERS"
   echo "  -w WIDTH          set the maximum width of the longest line in graphs "
@@ -52,29 +52,30 @@ function print_help() {
 
 # Function that processes input
 function process_the_input() {
-  INPUT_STR=""
-  if [ "$LOG_FILE" != "" ]; then # if user specify input file
-    ARRAY_OF_FILES=("$LOG_FILE")
-    for FILE in ${ARRAY_OF_FILES[*]}; do # open every file and write
-      if [ -r "$FILE" ]; then # if file is readable
-        if [[ "$FILE" == *".gz"* ]]; then # its content to the variable
-          FILE_CONTENT=$(gzip -dc "$FILE")
+  local input_string=""
+  local file_content=""
+  if [ "$LOG_FILES" != "" ]; then # if user specify input file
+    local array_of_files=("$LOG_FILES")
+    for file in ${array_of_files[*]}; do # open every file and write
+      if [ -r "$file" ]; then # if file is readable
+        if [[ "$file" == *".gz"* ]]; then # its content to the variable
+          file_content=$(gzip -dc "$file")
         else
-          FILE_CONTENT=$(cat "$FILE")
+          file_content=$(cat "$file")
         fi
       else
-        error_exit "Error: input file $FILE doesn't exist"
+        error_exit "Error: input file $file doesn't exist"
       fi
-      if [ "$INPUT_STR" == "" ]; then # if it's the first file
-        INPUT_STR="$FILE_CONTENT"
+      if [ "$input_string" == "" ]; then # if it's the first file
+        input_string="$file_content"
       else
-        INPUT_STR+=$(echo "$FILE_CONTENT" | awk 'BEGIN {printf("\n")} {print}')
+        input_string+=$(echo "$file_content" | awk 'BEGIN {printf("\n")} {print}')
       fi
     done
   else
     cat # else get input from stdin
   fi
-  echo "$INPUT_STR" | filter_the_input
+  echo "$input_string" | filter_the_input
 }
 
 # Function that filters input
@@ -108,17 +109,17 @@ function filter_the_input() {
 
 # Function that processes entered by user commands into sequence of operations
 function process_the_commands() {
-  if [ $IS_LIST_TICK -eq 1 ]; then
+  if [ $is_list_tick -eq 1 ]; then
     list_tick
-  elif [ $IS_PROFIT -eq 1 ]; then
+  elif [ $is_profit -eq 1 ]; then
     profit
-  elif [ $IS_POS -eq 1 ]; then
+  elif [ $is_pos -eq 1 ]; then
     pos | sort -k2nr -t:
-  elif [ $IS_LAST_PRICE -eq 1 ]; then
+  elif [ $is_last_price -eq 1 ]; then
     last_price
-  elif [ $IS_HIST_ORD -eq 1 ]; then
+  elif [ $is_hist_ord -eq 1 ]; then
     hist_ord
-  elif [ $IS_GRAPH_POS -eq 1 ]; then
+  elif [ $is_graph_pos -eq 1 ]; then
     graph_pos
   else
     cat
@@ -126,8 +127,8 @@ function process_the_commands() {
 }
 
 function check_datetime() {
-  local DATETIME_REGEX='([0-9]{4})-([0-1][0-9])-([0-3][0-9]) ([0-2][0-9]:[0-5][0-9]:[0-5][0-9])'
-  if ! [[ $1 =~ $DATETIME_REGEX ]]; then
+  local datetime_regex='([0-9]{4})-([0-1][0-9])-([0-3][0-9]) ([0-2][0-9]:[0-5][0-9]:[0-5][0-9])'
+  if ! [[ $1 =~ $datetime_regex ]]; then
     error_exit "Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
   fi
 }
@@ -137,6 +138,7 @@ function check_num_of_commands() {
       error_exit "Error: only one command must be entered"
     else
       NUM_OF_COMMANDS=1
+      readonly NUM_OF_COMMANDS
     fi
 }
 
@@ -147,26 +149,26 @@ function error_exit() {
 
 # Function that prints records after date time given by user
 function print_after_time() {
-  awk -v at="$AFTER_TIME" -F';' '
-  {if (at < $1)
+  awk -v after_time="$AFTER_TIME" -F';' '
+  {if (after_time < $1)
     print $0}'
 }
 
 # Function that prints records before date time given by user
 function print_before_time() {
-  awk -v bt="$BEFORE_TIME" -F';' '
-  {if (bt > $1)
+  awk -v before_time="$BEFORE_TIME" -F';' '
+  {if (before_time > $1)
     print $0}'
 }
 
 # Function that prints records by tickers, which are given by user
 function print_by_tickers() {
-  ARRAY_OF_TICKERS=("$TICKERS")
-  awk -v t="${ARRAY_OF_TICKERS[*]}" -F';' '
+  local array_of_tickers=("$TICKERS")
+  awk -v array_of_tickers="${array_of_tickers[*]}" -F';' '
   BEGIN {
-  n = split(t,array," ");
+  n = split(array_of_tickers,arr_of_t," ");
   for (i = 1; i <= n; i++)
-    tickers[array[i]]
+    tickers[arr_of_t[i]]
   }
   $2 in tickers {print}'
 }
@@ -190,10 +192,11 @@ function profit() {
 # TODO REFACTORING
 # Function that finds the longest num in 'pos' output and returns its length
 function get_length_of_the_longest_num_pos() {
-  ARRAY_OF_TICKERS=($(list_tick))
-  MAX_LENGTH=0
-  for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    NUM=$(echo "$INPUT" | awk -v ticker="$TICKER" -F';' '
+  local array_of_tickers=($(list_tick))
+  local max_length=0
+  local num=""
+  for ticker in ${array_of_tickers[*]}; do
+    num=$(echo "$INPUT" | awk -v ticker="$ticker" -F';' '
     BEGIN {num = 0; len = 12}
     {if ($2 == ticker && $3 == "buy")
       num = num + $6
@@ -202,19 +205,19 @@ function get_length_of_the_longest_num_pos() {
     if ($2 == ticker)
       last = $4}
     END {printf("%.2f", last * num)}')
-    if [ ${#NUM} -gt $MAX_LENGTH ]; then
-      MAX_LENGTH=${#NUM}
+    if [ ${#num} -gt $max_length ]; then
+      max_length=${#num}
     fi
   done
-  echo "$MAX_LENGTH"
+  echo "$max_length"
 }
 
 # Functions that prints list of obtained stocks in descending order by value
 function pos() {
   COLUMN_WIDTH=$(get_length_of_the_longest_num_pos)
-  ARRAY_OF_TICKERS=($(list_tick))
-  for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    echo "$INPUT" | awk -v ticker="$TICKER" -v len="$COLUMN_WIDTH" -F';' '
+  array_of_tickers=($(list_tick))
+  for ticker in ${array_of_tickers[*]}; do
+    echo "$INPUT" | awk -v ticker="$ticker" -v len="$COLUMN_WIDTH" -F';' '
     BEGIN {num = 0; len++}
     {if ($2 == ticker && $3 == "buy")
       num = num + $6
@@ -229,27 +232,27 @@ function pos() {
 # TODO REFACTORING
 # Function that finds the longest num in 'last_price' output and returns its length
 function get_length_of_the_longest_num_lp() {
-  ARRAY_OF_TICKERS=($(list_tick))
-  MAX_LENGTH=0
-  for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    NUM=$(echo "$INPUT" | awk -v ticker="$TICKER" -F';' '
+  array_of_tickers=($(list_tick))
+  max_length=0
+  for ticker in ${array_of_tickers[*]}; do
+    num=$(echo "$INPUT" | awk -v ticker="$ticker" -F';' '
     BEGIN {last = 0}
     {if ($2 == ticker)
       last = $4}
     END {printf("%.2f", last)}')
-    if [ ${#NUM} -gt $MAX_LENGTH ]; then
-      MAX_LENGTH=${#NUM}
+    if [ ${#num} -gt $max_length ]; then
+      max_length=${#num}
     fi
   done
-  echo "$MAX_LENGTH"
+  echo "$max_length"
 }
 
 # Function that prints last price of a stock of each ticker
 function last_price() {
   COLUMN_WIDTH=$(get_length_of_the_longest_num_lp)
-  ARRAY_OF_TICKERS=($(list_tick))
-  for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    echo "$INPUT" | sort -k1 -t\; | awk -v ticker="$TICKER" -v len="$COLUMN_WIDTH" -F';' '
+  array_of_tickers=($(list_tick))
+  for ticker in ${array_of_tickers[*]}; do
+    echo "$INPUT" | sort -k1 -t\; | awk -v ticker="$ticker" -v len="$COLUMN_WIDTH" -F';' '
     BEGIN {last = 0; len++}
     {if ($2 == ticker)
       last = $4}
@@ -259,33 +262,35 @@ function last_price() {
 
 # Function that finds the maximum number of transactions by each ticker
 function find_max_num_of_transactions() {
-  ARRAY_OF_TICKERS=($(list_tick))
-  MAX_NUM_OF_TRNSC=0
-  for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    tmp=$(echo "$INPUT" | awk -v ticker="$TICKER" -F';' '
+  array_of_tickers=($(list_tick))
+  local max_num_of_trnsc=0
+  for ticker in ${array_of_tickers[*]}; do
+    tmp=$(echo "$INPUT" | awk -v ticker="$ticker" -F';' '
     BEGIN {num = 0}
     {if ($2 == ticker)
       num++}
     END {print num}')
-    if [ "$tmp" -gt $MAX_NUM_OF_TRNSC ]; then
-      MAX_NUM_OF_TRNSC=$tmp
+    if [ "$tmp" -gt $max_num_of_trnsc ]; then
+      max_num_of_trnsc=$tmp
     fi
   done
+  echo "$max_num_of_trnsc"
 }
 
 # Function that prints a histogram of the number of transactions according to the ticker
 # with maximum width given by user (if any)
 function hist_ord() {
   # Setting the width
+  local max_num_of_trnsc=""
   if [ $WIDTH -eq -1 ]; then # if user doesn't set WIDTH
-    MAX_NUM_OF_TRNSC=$WIDTH
+    max_num_of_trnsc=$WIDTH
   else
-    find_max_num_of_transactions
+    max_num_of_trnsc=$(find_max_num_of_transactions)
   fi
   # Printing the histogram
-  ARRAY_OF_TICKERS=($(list_tick))
-  for TICKER in ${ARRAY_OF_TICKERS[*]}; do
-    echo "$INPUT" | awk -v ticker="$TICKER" -v max=$MAX_NUM_OF_TRNSC -v width=$WIDTH -F';' '
+  local array_of_tickers=($(list_tick))
+  for ticker in ${array_of_tickers[*]}; do
+    echo "$INPUT" | awk -v ticker="$ticker" -v max=$max_num_of_trnsc -v width=$WIDTH -F';' '
     BEGIN {num = 0}
     {if ($2 == ticker)
       num++}
@@ -299,7 +304,8 @@ function hist_ord() {
 
 # Function that finds the largest absolute value from output of 'pos' function
 function find_largest_abs_value_of_pos() {
-  ABS_VALUE=$(awk -F':' '
+  local largest_abs_value=""
+  largest_abs_value=$(awk -F':' '
     BEGIN {num = 0; max = 0}
     {if ($2 >= 0)
       num = $2
@@ -309,18 +315,19 @@ function find_largest_abs_value_of_pos() {
       max = num}
     END {printf("%.2f\n", max)}')
 
-  echo "$ABS_VALUE"
+  echo "$largest_abs_value"
 }
 
 # Function that prints a graph of obtained stocks values
 function graph_pos() {
-  ABS_VALUE=$(pos | find_largest_abs_value_of_pos)
+  local largest_abs_value=""
+  largest_abs_value=$(pos | find_largest_abs_value_of_pos)
   # Setting the width
   if [ $WIDTH -eq -1 ]; then # if user doesn't set WIDTH
-    WIDTH=$(awk -v max="$ABS_VALUE" 'BEGIN{print max/1000}' "$INPUT")
+    WIDTH=$(awk -v max="$largest_abs_value" 'BEGIN{print max/1000}' "$INPUT")
   fi
   # Printing the graph
-  pos | awk -v max="$ABS_VALUE" -v width="$WIDTH" -F':' '
+  pos | awk -v max="$largest_abs_value" -v width="$WIDTH" -F':' '
     {printf("%s:", $1)
     if ($2 >= 0)
     {for (i = 1; i <= $2/(max/width); i++){
@@ -364,7 +371,7 @@ while getopts :ha:b:t:w: o; do
       WIDTH="$OPTARG"
       WIDTH_CHECK='^[0-9]+$'
       # if WIDTH is a positive integer
-      if ! [[ $WIDTH =~ $WIDTH_CHECK ]] || [ $WIDTH -le 0 ]; then
+      if ! [[ $WIDTH =~ $WIDTH_CHECK ]] || [ "$WIDTH" -le 0 ]; then
         error_exit "Error: WIDTH must be a positive integer"
       fi
     else
@@ -384,45 +391,51 @@ while getopts :ha:b:t:w: o; do
   esac
 done
 
+readonly AFTER_TIME
+readonly BEFORE_TIME
+readonly TICKERS
+
 # ARGUMENTS PROCESSING
 ((OPTIND--))
 shift $OPTIND
 for _ in $*; do
   if [ "$1" == "list-tick" ]; then
     check_num_of_commands
-    IS_LIST_TICK=1
+    is_list_tick=1
   elif [ "$1" == "profit" ]; then
     check_num_of_commands
-    IS_PROFIT=1
+    is_profit=1
   elif [ "$1" == "pos" ]; then
     check_num_of_commands
-    IS_POS=1
+    is_pos=1
   elif [ "$1" == "last-price" ]; then
     check_num_of_commands
-    IS_LAST_PRICE=1
+    is_last_price=1
   elif [ "$1" == "hist-ord" ]; then
     check_num_of_commands
-    IS_HIST_ORD=1
+    is_hist_ord=1
   elif [ "$1" == "graph-pos" ]; then
     check_num_of_commands
-    IS_GRAPH_POS=1
+    is_graph_pos=1
   elif [ "$1" == "--help" ]; then
     print_help
   else
-    if [ "$LOG_FILE" == "" ]; then
-      LOG_FILE="$1"
+    if [ "$LOG_FILES" == "" ]; then
+      LOG_FILES="$1"
     else
-      LOG_FILE="$LOG_FILE $1"
+      LOG_FILES="$LOG_FILES $1"
     fi
   fi
   shift
 done
+readonly LOG_FILES
 
 #INPUT PROCESSING
 INPUT="$(process_the_input)"
 if [ $? -eq 1 ]; then
   exit 1
 fi
+readonly INPUT
 # RESULT PROCESSING
 echo "$INPUT" | process_the_commands
 
