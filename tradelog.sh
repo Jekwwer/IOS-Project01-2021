@@ -344,6 +344,8 @@ function graph_pos() {
 }
 
 ## START OF THE PROGRAM
+# MAIN function
+function main() {
 # OPTIONS PROCESSING
 while getopts :ha:b:t:w: o; do
   case "$o" in
@@ -440,3 +442,6 @@ readonly INPUT
 echo "$INPUT" | process_the_commands
 
 ## END OF THE PROGRAM
+}
+
+main "$@"
