@@ -623,7 +623,7 @@ echo "Test 69"
   test
 
 echo "Test 70"
-  result=$(./tradelog.sh -t "AA_" last-price my-stock-3.log 2>&1)
+  result=$(./tradelog.sh -t "AA " last-price my-stock-3.log 2>&1)
   expected="Error: TICKER must be a string without a semicolon(;) and white characters"
   return_value_test 1 1
   test
@@ -657,5 +657,43 @@ echo "Test 74"
 echo "Test 75"
   result=$(./tradelog.sh -w 2>&1)
   expected="Error: no argument after the -w option"
+  return_value_test 1 1
+  test
+
+echo ""
+echo "Tests \"more than one command\""
+echo "Test 76"
+  result=$(./tradelog.sh list-tick last-price my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 77"
+  result=$(./tradelog.sh -t AAA -t BBB profit hist-ord my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 78"
+  result=$(./tradelog.sh pos profit my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 79"
+  result=$(./tradelog.sh last-price last-price my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 80"
+  result=$(./tradelog.sh hist-ord pos my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 81"
+  result=$(./tradelog.sh graph-pos list-tick my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
   return_value_test 1 1
   test
