@@ -631,5 +631,31 @@ echo "Test 70"
 echo "Test 71"
   result=$(./tradelog.sh -t "AAA" last-price my-stock-3.log 2>&1)
   expected=$(cat "Control_Tests_Outputs/test71")
+  return_value_test 0 0
+  test
+
+echo ""
+echo "Tests \"no argument after an option\""
+echo "Test 72"
+  result=$(./tradelog.sh -t 2>&1)
+  expected="Error: no argument after the -t option"
+  return_value_test 1 1
+  test
+
+echo "Test 73"
+  result=$(./tradelog.sh -a 2>&1)
+  expected="Error: no argument after the -a option"
+  return_value_test 1 1
+  test
+
+echo "Test 74"
+  result=$(./tradelog.sh -b 2>&1)
+  expected="Error: no argument after the -b option"
+  return_value_test 1 1
+  test
+
+echo "Test 75"
+  result=$(./tradelog.sh -w 2>&1)
+  expected="Error: no argument after the -w option"
   return_value_test 1 1
   test
