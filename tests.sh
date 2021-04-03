@@ -659,3 +659,41 @@ echo "Test 75"
   expected="Error: no argument after the -w option"
   return_value_test 1 1
   test
+
+echo ""
+echo "Tests \"more than one command\""
+echo "Test 76"
+  result=$(./tradelog.sh tick-list last-price my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 77"
+  result=$(./tradelog.sh -t AAA -t BBB profit hist-ord my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 78"
+  result=$(./tradelog.sh pos profit my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 79"
+  result=$(./tradelog.sh last-price last-price my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 80"
+  result=$(./tradelog.sh hist-ord pos my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
+
+echo "Test 81"
+  result=$(./tradelog.sh graph-pos list-tick my-stock-4.log 2>&1)
+  expected="Error: only one command must be entered"
+  return_value_test 1 1
+  test
