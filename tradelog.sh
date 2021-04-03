@@ -376,7 +376,7 @@ function main() {
       ;;
     w)
       # Argument checking
-      if [ $is_width -eq 0 ]; then
+      if ! [ $is_width -eq 1 ]; then
         is_width=1
         WIDTH="$OPTARG"
         WIDTH_CHECK='^[0-9]+$'
@@ -389,8 +389,9 @@ function main() {
       fi
       ;;
     *)
-      if [[ "$OPTARG" == "a" ]] || [[ "$OPTARG" == "b" ]] ||
-        [[ "$OPTARG" == "t" ]] || [[ "$OPTARG" == "w" ]]; then
+      # if was written the correct option buut without an argument
+      if [ "$OPTARG" == "a" ] || [ "$OPTARG" == "b" ] ||
+        [ "$OPTARG" == "t" ] || [ "$OPTARG" == "w" ]; then
         error_exit "Error: no argument after the -$OPTARG option"
       fi
 
@@ -401,6 +402,7 @@ function main() {
     esac
   done
 
+  # options' arguments become constants won't be changed anymore
   readonly AFTER_TIME
   readonly BEFORE_TIME
   readonly TICKERS
@@ -438,6 +440,8 @@ function main() {
     fi
     shift
   done
+
+  # list of input files(if any) won't be changed anymore
   readonly LOG_FILES
 
   #INPUT PROCESSING
@@ -449,7 +453,6 @@ function main() {
 
   # RESULT PROCESSING
   echo "$INPUT" | process_the_commands
-
 
 } ## END OF THE MAIN FUNCTION
 
