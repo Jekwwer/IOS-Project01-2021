@@ -363,6 +363,11 @@ while getopts :ha:b:t:w: o; do
     fi
     ;;
   *)
+    if [[ "$OPTARG" == "a" ]] || [[ "$OPTARG" == "b" ]] ||
+    [[ "$OPTARG" == "t" ]] || [[ "$OPTARG" == "w" ]]; then
+      error_exit "Error: no argument after the -$OPTARG option"
+    fi
+
     if [[ "$*" != *"--help"* ]]; then
       error_exit "Error: Option doesn't exist"
     fi
