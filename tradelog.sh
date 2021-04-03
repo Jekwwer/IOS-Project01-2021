@@ -20,7 +20,7 @@ is_pos=0
 is_last_price=0
 is_hist_ord=0
 is_graph_pos=0
-IS_WIDTH=0
+is_width=0
 
 ## FUNCTIONS ##
 # Function that prints help message for the user
@@ -50,32 +50,33 @@ function print_help() {
   exit
 }
 
+## INPUT PROCESSING FUNCTIONS
 # Function that processes input
 function process_the_input() {
   local input_string=""
   local file_content=""
-  if [ "$LOG_FILES" != "" ]; then # if user specify input file
+  if [ "$LOG_FILES" != "" ]; then           # IF user specify input file
     local array_of_files=("$LOG_FILES")
-    for file in ${array_of_files[*]}; do # open every file and write
-      if [ -r "$file" ]; then # if file is readable
-        if [[ "$file" == *".gz"* ]]; then # its content to the variable
+    for file in ${array_of_files[*]}; do    # open every file and write its content to the variable
+      if [ -r "$file" ]; then               # if file is readable
+        if [[ "$file" == *".gz"* ]]; then   # if it's a .gz file
           file_content=$(gzip -dc "$file")
         else
           file_content=$(cat "$file")
         fi
-      else
+      else                                  # if file is not readable
         error_exit "Error: input file $file doesn't exist"
       fi
-      if [ "$input_string" == "" ]; then # if it's the first file
+      if [ "$input_string" == "" ]; then    # if it's the first file
         input_string="$file_content"
       else
         input_string+=$(echo "$file_content" | awk 'BEGIN {printf("\n")} {print}')
       fi
     done
   else
-    cat # else get input from stdin
+    cat                                     # ELSE get input from stdin
   fi
-  echo "$input_string" | filter_the_input
+  echo "$input_string" | filter_the_input   # filter the input by given filters(if any)
 }
 
 # Function that filters input
@@ -107,7 +108,7 @@ function filter_the_input() {
   fi
 }
 
-# Function that processes entered by user commands into sequence of operations
+# Function that processes entered by user command (if any)
 function process_the_commands() {
   if [ $is_list_tick -eq 1 ]; then
     list_tick
@@ -126,13 +127,16 @@ function process_the_commands() {
   fi
 }
 
-function check_datetime() {
+## CHECKING FUNCTIONS
+# Function that checks DATETIME argument by regular expression
+function check_datetime() { #TODO MORE PRECISE REGEX
   local datetime_regex='([0-9]{4})-([0-1][0-9])-([0-3][0-9]) ([0-2][0-9]:[0-5][0-9]:[0-5][0-9])'
   if ! [[ $1 =~ $datetime_regex ]]; then
     error_exit "Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
   fi
 }
 
+# Function that checks number of commands given by user
 function check_num_of_commands() {
     if [ $NUM_OF_COMMANDS -eq 1 ]; then
       error_exit "Error: only one command must be entered"
@@ -142,11 +146,14 @@ function check_num_of_commands() {
     fi
 }
 
+## EXIT FUNCTION
+# Function that finishes the program with error message
 function error_exit() {
   echo "$1" 1>&2
   exit 1
 }
 
+## FILTERING FUNCTIONS
 # Function that prints records after date time given by user
 function print_after_time() {
   awk -v after_time="$AFTER_TIME" -F';' '
@@ -173,6 +180,7 @@ function print_by_tickers() {
   $2 in tickers {print}'
 }
 
+## COMMAND FUNCTIONS WITH THEIR SUBFUNCTIONS
 # Function that prints the list of tickers
 function list_tick() {
   echo "$INPUT" | awk -F';' '{print $2}' | sort -u
@@ -189,13 +197,12 @@ function profit() {
   END {printf("%.2f\n", profit)}'
 }
 
-# TODO REFACTORING
 # Function that finds the longest num in 'pos' output and returns its length
 function get_length_of_the_longest_num_pos() {
   local array_of_tickers=($(list_tick))
   local max_length=0
   local num=""
-  for ticker in ${array_of_tickers[*]}; do
+  for ticker in ${array_of_tickers[*]}; do    # calculate value for every ticker
     num=$(echo "$INPUT" | awk -v ticker="$ticker" -F';' '
     BEGIN {num = 0; len = 12}
     {if ($2 == ticker && $3 == "buy")
@@ -205,19 +212,20 @@ function get_length_of_the_longest_num_pos() {
     if ($2 == ticker)
       last = $4}
     END {printf("%.2f", last * num)}')
-    if [ ${#num} -gt $max_length ]; then
-      max_length=${#num}
+    if [ ${#num} -gt $max_length ]; then      # if it's longer
+      max_length=${#num}                      # save its length
     fi
   done
-  echo "$max_length"
+  echo "$max_length"                          # return the length of the longest value
 }
 
-# Functions that prints list of obtained stocks in descending order by value
+# Functions that prints list of obtained stocks values in descending order
 function pos() {
-  COLUMN_WIDTH=$(get_length_of_the_longest_num_pos)
-  array_of_tickers=($(list_tick))
+  local column_width=""
+  column_width=$(get_length_of_the_longest_num_pos)
+  local array_of_tickers=($(list_tick))
   for ticker in ${array_of_tickers[*]}; do
-    echo "$INPUT" | awk -v ticker="$ticker" -v len="$COLUMN_WIDTH" -F';' '
+    echo "$INPUT" | awk -v ticker="$ticker" -v len="$column_width" -F';' '
     BEGIN {num = 0; len++}
     {if ($2 == ticker && $3 == "buy")
       num = num + $6
@@ -229,30 +237,30 @@ function pos() {
   done
 }
 
-# TODO REFACTORING
 # Function that finds the longest num in 'last_price' output and returns its length
 function get_length_of_the_longest_num_lp() {
-  array_of_tickers=($(list_tick))
-  max_length=0
-  for ticker in ${array_of_tickers[*]}; do
+  local array_of_tickers=($(list_tick))
+  local max_length=0
+  for ticker in ${array_of_tickers[*]}; do      # find last price for every ticket
     num=$(echo "$INPUT" | awk -v ticker="$ticker" -F';' '
     BEGIN {last = 0}
     {if ($2 == ticker)
       last = $4}
     END {printf("%.2f", last)}')
-    if [ ${#num} -gt $max_length ]; then
-      max_length=${#num}
+    if [ ${#num} -gt $max_length ]; then        # if it's longer
+      max_length=${#num}                        # save its length
     fi
   done
-  echo "$max_length"
+  echo "$max_length"                            # return the length of the longest value
 }
 
 # Function that prints last price of a stock of each ticker
 function last_price() {
-  COLUMN_WIDTH=$(get_length_of_the_longest_num_lp)
+  local column_width=""
+  column_width=$(get_length_of_the_longest_num_lp)
   array_of_tickers=($(list_tick))
   for ticker in ${array_of_tickers[*]}; do
-    echo "$INPUT" | sort -k1 -t\; | awk -v ticker="$ticker" -v len="$COLUMN_WIDTH" -F';' '
+    echo "$INPUT" | sort -k1 -t\; | awk -v ticker="$ticker" -v len="$column_width" -F';' '
     BEGIN {last = 0; len++}
     {if ($2 == ticker)
       last = $4}
@@ -264,17 +272,17 @@ function last_price() {
 function find_max_num_of_transactions() {
   array_of_tickers=($(list_tick))
   local max_num_of_trnsc=0
-  for ticker in ${array_of_tickers[*]}; do
+  for ticker in ${array_of_tickers[*]}; do        # count number of transactions for every ticket
     tmp=$(echo "$INPUT" | awk -v ticker="$ticker" -F';' '
     BEGIN {num = 0}
     {if ($2 == ticker)
       num++}
     END {print num}')
-    if [ "$tmp" -gt $max_num_of_trnsc ]; then
-      max_num_of_trnsc=$tmp
+    if [ "$tmp" -gt $max_num_of_trnsc ]; then     # if it's bigger
+      max_num_of_trnsc=$tmp                       # save the value
     fi
   done
-  echo "$max_num_of_trnsc"
+  echo "$max_num_of_trnsc"                        # return maximum
 }
 
 # Function that prints a histogram of the number of transactions according to the ticker
@@ -315,7 +323,7 @@ function find_largest_abs_value_of_pos() {
       max = num}
     END {printf("%.2f\n", max)}')
 
-  echo "$largest_abs_value"
+  echo "$largest_abs_value"               # Return the largest absolute value
 }
 
 # Function that prints a graph of obtained stocks values
@@ -343,105 +351,108 @@ function graph_pos() {
       printf("\n")}}'
 }
 
-## START OF THE PROGRAM
-# MAIN function
+## MAIN FUNCTION
 function main() {
-# OPTIONS PROCESSING
-while getopts :ha:b:t:w: o; do
-  case "$o" in
-  h)
-    print_help
-    ;;
-  a)
-    AFTER_TIME="$OPTARG"
-    check_datetime "$AFTER_TIME"
-    ;;
-  b)
-    BEFORE_TIME="$OPTARG"
-    check_datetime "$BEFORE_TIME"
-    ;;
-  t)
-    if [[ "$OPTARG" == *" "* ]] || [[ "$OPTARG" == *";"* ]]; then
-      error_exit "Error: TICKER must be a string without a semicolon(;) and white characters"
-    fi
-    TICKERS="$TICKERS $OPTARG"
-    ;;
-  w)
-    # Argument checking
-    if [ $IS_WIDTH -eq 0 ]; then
-      IS_WIDTH=1
-      WIDTH="$OPTARG"
-      WIDTH_CHECK='^[0-9]+$'
-      # if WIDTH is a positive integer
-      if ! [[ $WIDTH =~ $WIDTH_CHECK ]] || [ "$WIDTH" -le 0 ]; then
-        error_exit "Error: WIDTH must be a positive integer"
+
+  # OPTIONS PROCESSING
+  while getopts :ha:b:t:w: o; do
+    case "$o" in
+    h)
+      print_help
+      ;;
+    a)
+      AFTER_TIME="$OPTARG"
+      check_datetime "$AFTER_TIME"
+      ;;
+    b)
+      BEFORE_TIME="$OPTARG"
+      check_datetime "$BEFORE_TIME"
+      ;;
+    t)
+      if [[ "$OPTARG" == *" "* ]] || [[ "$OPTARG" == *";"* ]]; then
+        error_exit "Error: TICKER must be a string without a semicolon(;) and white characters"
       fi
+      TICKERS="$TICKERS $OPTARG"
+      ;;
+    w)
+      # Argument checking
+      if [ $is_width -eq 0 ]; then
+        is_width=1
+        WIDTH="$OPTARG"
+        WIDTH_CHECK='^[0-9]+$'
+        # if WIDTH is a positive integer
+        if ! [[ $WIDTH =~ $WIDTH_CHECK ]] || [ "$WIDTH" -le 0 ]; then
+          error_exit "Error: WIDTH must be a positive integer"
+        fi
+      else
+        error_exit "Error: option '-w' must occur only once"
+      fi
+      ;;
+    *)
+      if [[ "$OPTARG" == "a" ]] || [[ "$OPTARG" == "b" ]] ||
+        [[ "$OPTARG" == "t" ]] || [[ "$OPTARG" == "w" ]]; then
+        error_exit "Error: no argument after the -$OPTARG option"
+      fi
+
+      if [[ "$*" != *"--help"* ]]; then
+        error_exit "Error: Option doesn't exist"
+      fi
+      ;;
+    esac
+  done
+
+  readonly AFTER_TIME
+  readonly BEFORE_TIME
+  readonly TICKERS
+
+  # ARGUMENTS PROCESSING
+  ((OPTIND--))
+  shift $OPTIND
+  for _ in $*; do
+    if [ "$1" == "list-tick" ]; then
+      check_num_of_commands
+      is_list_tick=1
+    elif [ "$1" == "profit" ]; then
+      check_num_of_commands
+      is_profit=1
+    elif [ "$1" == "pos" ]; then
+      check_num_of_commands
+      is_pos=1
+    elif [ "$1" == "last-price" ]; then
+      check_num_of_commands
+      is_last_price=1
+    elif [ "$1" == "hist-ord" ]; then
+      check_num_of_commands
+      is_hist_ord=1
+    elif [ "$1" == "graph-pos" ]; then
+      check_num_of_commands
+      is_graph_pos=1
+    elif [ "$1" == "--help" ]; then
+      print_help
     else
-      error_exit "Error: option '-w' must occur only once"
+      if [ "$LOG_FILES" == "" ]; then
+        LOG_FILES="$1"
+      else
+        LOG_FILES="$LOG_FILES $1"
+      fi
     fi
-    ;;
-  *)
-    if [[ "$OPTARG" == "a" ]] || [[ "$OPTARG" == "b" ]] ||
-    [[ "$OPTARG" == "t" ]] || [[ "$OPTARG" == "w" ]]; then
-      error_exit "Error: no argument after the -$OPTARG option"
-    fi
+    shift
+  done
+  readonly LOG_FILES
 
-    if [[ "$*" != *"--help"* ]]; then
-      error_exit "Error: Option doesn't exist"
-    fi
-    ;;
-  esac
-done
-
-readonly AFTER_TIME
-readonly BEFORE_TIME
-readonly TICKERS
-
-# ARGUMENTS PROCESSING
-((OPTIND--))
-shift $OPTIND
-for _ in $*; do
-  if [ "$1" == "list-tick" ]; then
-    check_num_of_commands
-    is_list_tick=1
-  elif [ "$1" == "profit" ]; then
-    check_num_of_commands
-    is_profit=1
-  elif [ "$1" == "pos" ]; then
-    check_num_of_commands
-    is_pos=1
-  elif [ "$1" == "last-price" ]; then
-    check_num_of_commands
-    is_last_price=1
-  elif [ "$1" == "hist-ord" ]; then
-    check_num_of_commands
-    is_hist_ord=1
-  elif [ "$1" == "graph-pos" ]; then
-    check_num_of_commands
-    is_graph_pos=1
-  elif [ "$1" == "--help" ]; then
-    print_help
-  else
-    if [ "$LOG_FILES" == "" ]; then
-      LOG_FILES="$1"
-    else
-      LOG_FILES="$LOG_FILES $1"
-    fi
+  #INPUT PROCESSING
+  INPUT="$(process_the_input)"
+  if [ $? -eq 1 ]; then
+    exit 1
   fi
-  shift
-done
-readonly LOG_FILES
+  readonly INPUT
 
-#INPUT PROCESSING
-INPUT="$(process_the_input)"
-if [ $? -eq 1 ]; then
-  exit 1
-fi
-readonly INPUT
-# RESULT PROCESSING
-echo "$INPUT" | process_the_commands
+  # RESULT PROCESSING
+  echo "$INPUT" | process_the_commands
 
-## END OF THE PROGRAM
-}
 
+} ## END OF THE MAIN FUNCTION
+
+## START OF THE PROGRAM
 main "$@"
+## END OF THE PROGRAM
