@@ -343,6 +343,9 @@ while getopts :ha:b:t:w: o; do
     check_datetime "$BEFORE_TIME"
     ;;
   t)
+    if [[ "$OPTARG" == *" "* ]] || [[ "$OPTARG" == *";"* ]]; then
+      error_exit "Error: TICKER must be a string without a semicolon(;) and white characters"
+    fi
     TICKERS="$TICKERS $OPTARG"
     ;;
   w)
