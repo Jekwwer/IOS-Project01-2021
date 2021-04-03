@@ -589,3 +589,47 @@ echo "Test 64.2"
   expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
   return_value_test 1 1
   test
+
+echo ""
+echo "Tests \"bad TICKER format\""
+echo "Test 65"
+  result=$(./tradelog.sh -t "A A" last-price my-stock-3.log 2>&1)
+  expected="Error: TICKER must be a string without a semicolon(;) and white characters"
+  return_value_test 1 1
+  test
+
+echo "Test 66"
+  result=$(./tradelog.sh -t "A;A" last-price my-stock-3.log 2>&1)
+  expected="Error: TICKER must be a string without a semicolon(;) and white characters"
+  return_value_test 1 1
+  test
+
+echo "Test 67"
+  result=$(./tradelog.sh -t ";AA" last-price my-stock-3.log 2>&1)
+  expected="Error: TICKER must be a string without a semicolon(;) and white characters"
+  return_value_test 1 1
+  test
+
+echo "Test 68"
+  result=$(./tradelog.sh -t " AA" last-price my-stock-3.log 2>&1)
+  expected="Error: TICKER must be a string without a semicolon(;) and white characters"
+  return_value_test 1 1
+  test
+
+echo "Test 69"
+  result=$(./tradelog.sh -t "AA;" last-price my-stock-3.log 2>&1)
+  expected="Error: TICKER must be a string without a semicolon(;) and white characters"
+  return_value_test 1 1
+  test
+
+echo "Test 70"
+  result=$(./tradelog.sh -t "AA_" last-price my-stock-3.log 2>&1)
+  expected="Error: TICKER must be a string without a semicolon(;) and white characters"
+  return_value_test 1 1
+  test
+
+echo "Test 71"
+  result=$(./tradelog.sh -t "AAA" last-price my-stock-3.log 2>&1)
+  expected=$(cat "Control_Tests_Outputs/test71")
+  return_value_test 1 1
+  test
