@@ -663,7 +663,7 @@ echo "Test 75"
 echo ""
 echo "Tests \"more than one command\""
 echo "Test 76"
-  result=$(./tradelog.sh tick-list last-price my-stock-4.log 2>&1)
+  result=$(./tradelog.sh list-tick last-price my-stock-4.log 2>&1)
   expected="Error: only one command must be entered"
   return_value_test 1 1
   test
