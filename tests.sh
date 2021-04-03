@@ -335,3 +335,257 @@ echo "Test 43"
   expected="Error: input file not-my-stock-69.log.gz doesn't exist"
   return_value_test 1 1
   test
+
+echo ""
+echo "Tests \"bad DATETIME format\""
+echo "Test 44.1"
+  result=$(./tradelog.sh -a "2o21-04-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 44.2"
+  result=$(./tradelog.sh -b "2o21-04-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 45.1"
+  result=$(./tradelog.sh -a "2021-0A-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 45.2"
+  result=$(./tradelog.sh -b "2021-0A-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 46.1"
+  result=$(./tradelog.sh -a "2021-04-0! 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 46.2"
+  result=$(./tradelog.sh -b "2021-04-0! 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 47.1"
+  result=$(./tradelog.sh -a "2021-04-01 1E:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 47.2"
+  result=$(./tradelog.sh -b "2021-04-01 1E:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 48.1"
+  result=$(./tradelog.sh -a "2021-04-01 13:ET:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 48.2"
+  result=$(./tradelog.sh -b "2021-04-01 13:ET:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 49.1"
+  result=$(./tradelog.sh -a "2021-04-01 13:ET:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 49.2"
+  result=$(./tradelog.sh -b "2021-04-01 13:ET:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 50.1"
+  result=$(./tradelog.sh -a "2021-04-01 13:37:EA" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 50.2"
+  result=$(./tradelog.sh -b "2021-04-01 13:37:EA" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 51.1"
+  result=$(./tradelog.sh -a "21-04-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 51.2"
+  result=$(./tradelog.sh -b "21-04-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 52.1"
+  result=$(./tradelog.sh -a "2021-4-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 52.2"
+  result=$(./tradelog.sh -b "2021-4-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 53.1"
+  result=$(./tradelog.sh -a "2021-04-1 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 53.2"
+  result=$(./tradelog.sh -b "2021-04-1 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 54.1"
+  result=$(./tradelog.sh -a "2021-04-01 5:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 54.2"
+  result=$(./tradelog.sh -b "2021-04-01 5:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+ echo "Test 55.1"
+  result=$(./tradelog.sh -a "2021-13-01 13:7:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+ echo "Test 55.2"
+  result=$(./tradelog.sh -b "2021-13-01 13:7:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 56.1"
+  result=$(./tradelog.sh -a "2021-13-01 13:37:4" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 56.2"
+  result=$(./tradelog.sh -b "2021-13-01 13:37:4" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 57.1"
+  result=$(./tradelog.sh -a "2021-20-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 57.2"
+  result=$(./tradelog.sh -b "2021-20-01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 58.1"
+  result=$(./tradelog.sh -a "2021-04-69 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 58.2"
+  result=$(./tradelog.sh -b "2021-04-69 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 59.1"
+  result=$(./tradelog.sh -a "2021-12-01 34:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 59.2"
+  result=$(./tradelog.sh -b "2021-12-01 34:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 60.1"
+  result=$(./tradelog.sh -a "2021-13-01 13:69:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 60.2"
+  result=$(./tradelog.sh -a "2021-13-01 13:69:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 61.1"
+  result=$(./tradelog.sh -a "2021-13-01 13:37:99" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 61.2"
+  result=$(./tradelog.sh -b "2021-13-01 13:37:99" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 62.1"
+  result=$(./tradelog.sh -a "2021/13/01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 62.2"
+  result=$(./tradelog.sh -b "2021/13/01 13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 63.1"
+  result=$(./tradelog.sh -a "2021-13-01 13.37.34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 63.2"
+  result=$(./tradelog.sh -b "2021-13-01 13.37.34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 64.1"
+  result=$(./tradelog.sh -a "2021-13-01_13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
+
+echo "Test 64.2"
+  result=$(./tradelog.sh -b "2021-13-01_13:37:34" -t AAA list-tick my-stock-2.log 2>&1)
+  expected="Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
+  return_value_test 1 1
+  test
