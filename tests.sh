@@ -623,7 +623,7 @@ echo "Test 69"
   test
 
 echo "Test 70"
-  result=$(./tradelog.sh -t "AA_" last-price my-stock-3.log 2>&1)
+  result=$(./tradelog.sh -t "AA " last-price my-stock-3.log 2>&1)
   expected="Error: TICKER must be a string without a semicolon(;) and white characters"
   return_value_test 1 1
   test
