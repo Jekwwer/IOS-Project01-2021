@@ -13,6 +13,7 @@ LOG_FILE=""
 WIDTH=-1
 
 # Default values for command-flag variables
+NUM_OF_COMMANDS=0
 IS_LIST_TICK=0
 IS_PROFIT=0
 IS_POS=0
@@ -129,6 +130,14 @@ function check_datetime() {
   if ! [[ $1 =~ $DATETIME_REGEX ]]; then
     error_exit "Error: DATETIME argument is not in format YYYY-MM-DD HH:MM:SS or given invalid time"
   fi
+}
+
+function check_num_of_commands() {
+    if [ $NUM_OF_COMMANDS -eq 1 ]; then
+      error_exit "Error: only one command must be entered"
+    else
+      NUM_OF_COMMANDS=1
+    fi
 }
 
 function error_exit() {
@@ -380,16 +389,22 @@ done
 shift $OPTIND
 for _ in $*; do
   if [ "$1" == "list-tick" ]; then
+    check_num_of_commands
     IS_LIST_TICK=1
   elif [ "$1" == "profit" ]; then
+    check_num_of_commands
     IS_PROFIT=1
   elif [ "$1" == "pos" ]; then
+    check_num_of_commands
     IS_POS=1
   elif [ "$1" == "last-price" ]; then
+    check_num_of_commands
     IS_LAST_PRICE=1
   elif [ "$1" == "hist-ord" ]; then
+    check_num_of_commands
     IS_HIST_ORD=1
   elif [ "$1" == "graph-pos" ]; then
+    check_num_of_commands
     IS_GRAPH_POS=1
   elif [ "$1" == "--help" ]; then
     print_help
