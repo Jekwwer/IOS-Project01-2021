@@ -1,10 +1,11 @@
-# IOS-Project1-2021
-Solution of the 1st project from the subject IOS in 2020/21. <br />
-Řešení 1. projektu z předmětu IOS v roce 2020/21. <br /> 
-VUT FIT
+# IOS-Project01-2021
 
-## Hodnocení 
-| Test                                            | Výsledek testu |
+Solution for the 1st project from the subject _'IOS (Operating Systems)'_ for the academic year 2020/21 at VUT FIT. <br />
+Řešení 1. projektu z předmětu _'IOS (Operační systémy)'_ pro akademický rok 2020/21 na VUT FIT.
+
+## Evaluation
+
+| Test                                            |     Result     |
 | :---------------------------------------------- | :------------: |
 | opis vstupniho souboru na vystup                |       ok       |
 | opis vice vstupnich souboru na vystup           |       ok       |
@@ -25,5 +26,5 @@ VUT FIT
 | filtr -t profit                                 |       ok       |
 | docasne soubory                                 |       ok       |
 
-Celkové score   **18/18 (max pro hodnocení 15)**<br /> 
-Celkem bodů 	**15/15** b. 	
+Total score: **18/18 (max for evaluation 15)** <br />
+Total points: **15/15**
