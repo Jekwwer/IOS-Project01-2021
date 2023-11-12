@@ -1,4 +1,25 @@
 #!/bin/bash
+# File: tradelog
+# Purpose: Process trading logs to output ticker information, calculate profits, and generate visualizations.
+# Usage: ./tradelog [options] [arguments]
+# Options include:
+#   - list tickers from log files
+#   - calculate and show profits
+#   - display last prices
+#   - show historical orders
+#   - graph positions with a specified width
+# This script requires POSIXLY_CORRECT and LC_ALL environment variables to be set for proper execution.
+# Author: Evgenii Shiliaev
+# Date: April 3rd, 2021
+#
+# Repo Link: https://github.com/Jekwwer/IOS-Project01-2021
+#
+# This script supports various operations on trading logs, such as listing tickers, 
+# calculating profits, showing positions, last traded prices, historical orders, 
+# and graphing positions based on user input. It uses command-line options to 
+# determine the operation mode. For detailed usage instructions, run the script 
+# with the help option.
+
 
 ## VARIABLES ##
 # Some variables exports for correct script working
@@ -459,3 +480,5 @@ function main() {
 ## START OF THE PROGRAM
 main "$@"
 ## END OF THE PROGRAM
+
+# End of tradelog

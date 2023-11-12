@@ -1,4 +1,21 @@
 #!/bin/bash
+# File: tests
+# Purpose: Perform automated tests on the 'tradelog' script to ensure accuracy and reliability.
+# Usage: ./tests
+# This script runs a series of predefined test cases on the 'tradelog' script, comparing the output
+# with expected results and reporting any discrepancies. It is intended to be used as part of the
+# quality assurance process for the 'tradelog' script.
+# The tests are based on scenarios from the project webpage and control test outputs.
+# Author: Evgenii Shiliaev
+# Date: April 3rd, 2021
+#
+# Repo Link: https://github.com/Jekwwer/IOS-Project01-2021
+#
+# The test suite includes functionality tests for listing tickers, calculating profits, displaying
+# last prices, showing historical orders, and graphing positions. It will abort on the first test
+# failure. To add new tests, define the expected outcome and use the provided functions to compare
+# with the actual 'tradelog' script output.
+
 
 function test() {
   if [[ "$result" == "$expected" ]]; then
@@ -697,3 +714,5 @@ echo "Test 81"
   expected="Error: only one command must be entered"
   return_value_test 1 1
   test
+
+# End of tests
